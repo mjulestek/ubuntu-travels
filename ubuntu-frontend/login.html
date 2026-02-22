@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin Login</title>
+    <link rel="shortcut icon" href="./favicon.svg" type="image/svg+xml">
+    <link rel="stylesheet" href="./assets/css/style.css">
+    <link rel="stylesheet" href="./assets/css/brand-colors.css">
+</head>
+<body id="top">
+
+<header class="header" data-header>
+    <div class="container">
+        <a href="./index.html"><h1 class="logo">Tourest Admin</h1></a>
+    </div>
+</header>
+
+<main>
+    <article>
+        <section class="section" style="padding-top:120px;">
+            <div class="container" style="max-width:720px;">
+                <div class="popular-card" style="padding:18px;">
+                    <h2 class="h2 section-title" style="margin-bottom:10px;">Admin Login</h2>
+
+                    <form id="loginForm" style="display:grid; gap:10px; margin-top:14px;">
+                        <input class="newsletter-input" type="email" name="email" placeholder="admin@tourest.com" required>
+                        <input class="newsletter-input" type="password" name="password" placeholder="Password" required>
+                        <button class="btn btn-primary" type="submit">Login</button>
+                    </form>
+
+                    <p id="msg" style="margin-top:12px; font-weight:800;"></p>
+                </div>
+            </div>
+        </section>
+    </article>
+</main>
+
+<script src="./assets/js/app-config.js"></script>
+<script src="./assets/js/login.js"></script>
+</body>
+</html>

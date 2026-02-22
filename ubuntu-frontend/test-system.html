@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>System Test - Ubuntu Travels</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: #f5f5f5;
+            padding: 20px;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        h1 {
+            margin-bottom: 30px;
+            color: #1a1a1a;
+        }
+        .test-section {
+            background: white;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        .test-section h2 {
+            margin-bottom: 15px;
+            color: #E3702D;
+        }
+        .status {
+            padding: 10px;
+            border-radius: 4px;
+            margin-bottom: 10px;
+        }
+        .status.loading {
+            background: #E3F2FD;
+            color: #1976D2;
+        }
+        .status.success {
+            background: #E8F5E9;
+            color: #2E7D32;
+        }
+        .status.error {
+            background: #FFEBEE;
+            color: #C62828;
+        }
+        pre {
+            background: #f5f5f5;
+            padding: 10px;
+            border-radius: 4px;
+            overflow-x: auto;
+            font-size: 12px;
+        }
+        .btn {
+            background: #E3702D;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            margin-right: 10px;
+        }
+        .btn:hover {
+            background: #c95c20;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔍 Ubuntu Travels System Test</h1>
+        
+        <div class="test-section">
+            <h2>1. Backend Health Check</h2>
+            <div id="healthStatus" class="status loading">Testing...</div>
+            <pre id="healthResult"></pre>
+        </div>
+        
+        <div class="test-section">
+            <h2>2. Guides API (Homepage - Limit 8)</h2>
+            <div id="guidesStatus" class="status loading">Testing...</div>
+            <pre id="guidesResult"></pre>
+        </div>
+        
+        <div class="test-section">
+            <h2>3. All Guides API (No Limit)</h2>
+            <div id="allGuidesStatus" class="status loading">Testing...</div>
+            <pre id="allGuidesResult"></pre>
+        </div>
+        
+        <div class="test-section">
+            <h2>4. Frontend Files</h2>
+            <div id="filesStatus" class="status loading">Testing...</div>
+            <pre id="filesResult"></pre>
+        </div>
+        
+        <div class="test-section">
+            <h2>5. Image Upload Test</h2>
+            <input type="file" id="testImageInput" accept="image/*">
+            <button class="btn" onclick="testImageUpload()">Test Upload</button>
+            <div id="uploadStatus" class="status" style="display:none; margin-top:10px;"></div>
+            <pre id="uploadResult"></pre>
+        </div>
+        
+        <div class="test-section">
+            <h2>Actions</h2>
+            <button class="btn" onclick="location.reload()">Refresh Tests</button>
+            <button class="btn" onclick="window.location.href='./index.html'">Go to Homepage</button>
+            <button class="btn" onclick="window.location.href='./all-guides.html'">Go to All Guides</button>
+        </div>
+    </div>
+
+    <script src="./assets/js/config.js"></script>
+    <script>
+        async function runTests() {
+            // Test 1: Backend Health
+            try {
+                const res = await fetch(`${API_BASE}/api/health`);
+                const data = await res.json();
+                document.getElementById('healthStatus').className = 'status success';
+                document.getElementById('healthStatus').textContent = '✅ Backend is running';
+                document.getElementById('healthResult').textContent = JSON.stringify(data, null, 2);
+            } catch (err) {
+                document.getElementById('healthStatus').className = 'status error';
+                document.getElementById('healthStatus').textContent = '❌ Backend error: ' + err.message;
+            }
+            
+            // Test 2: Guides API (Limited)
+            try {
+                const res = await fetch(`${API_BASE}/api/guides?limit=8`);
+                const data = await res.json();
+                const guides = data.data || [];
+                document.getElementById('guidesStatus').className = 'status success';
+                document.getElementById('guidesStatus').textContent = `✅ Found ${guides.length} guides (limit 8)`;
+                
+                const summary = guides.map((g, i) => 
+                    `${i+1}. ${g.full_name || 'NO NAME'} (${g.slug})\n   Photo: ${g.photo_url ? 'Yes' : 'No'}\n   Intro: ${g.short_intro || 'None'}`
+                ).join('\n\n');
+                
+                document.getElementById('guidesResult').textContent = summary;
+            } catch (err) {
+                document.getElementById('guidesStatus').className = 'status error';
+                document.getElementById('guidesStatus').textContent = '❌ Guides API error: ' + err.message;
+            }
+            
+            // Test 3: All Guides API
+            try {
+                const res = await fetch(`${API_BASE}/api/guides`);
+                const data = await res.json();
+                const guides = data.data || [];
+                document.getElementById('allGuidesStatus').className = 'status success';
+                document.getElementById('allGuidesStatus').textContent = `✅ Found ${guides.length} total guides`;
+                document.getElementById('allGuidesResult').textContent = `Total guides in database: ${guides.length}\n\nAll have full_name: ${guides.every(g => g.full_name) ? 'Yes ✅' : 'No ❌'}`;
+            } catch (err) {
+                document.getElementById('allGuidesStatus').className = 'status error';
+                document.getElementById('allGuidesStatus').textContent = '❌ All Guides API error: ' + err.message;
+            }
+            
+            // Test 4: Frontend Files
+            try {
+                const files = [
+                    './assets/js/guides.js',
+                    './assets/js/all-guides.js',
+                    './assets/css/guides-section.css'
+                ];
+                
+                const results = await Promise.all(files.map(async (file) => {
+                    const res = await fetch(file);
+                    return { file, status: res.status, ok: res.ok };
+                }));
+                
+                const allOk = results.every(r => r.ok);
+                document.getElementById('filesStatus').className = allOk ? 'status success' : 'status error';
+                document.getElementById('filesStatus').textContent = allOk ? '✅ All files accessible' : '❌ Some files missing';
+                document.getElementById('filesResult').textContent = results.map(r => 
+                    `${r.ok ? '✅' : '❌'} ${r.file} (${r.status})`
+                ).join('\n');
+            } catch (err) {
+                document.getElementById('filesStatus').className = 'status error';
+                document.getElementById('filesStatus').textContent = '❌ File check error: ' + err.message;
+            }
+        }
+        
+        async function testImageUpload() {
+            const input = document.getElementById('testImageInput');
+            const file = input.files[0];
+            
+            if (!file) {
+                alert('Please select an image first');
+                return;
+            }
+            
+            const statusDiv = document.getElementById('uploadStatus');
+            const resultPre = document.getElementById('uploadResult');
+            
+            statusDiv.style.display = 'block';
+            statusDiv.className = 'status loading';
+            statusDiv.textContent = 'Testing upload...';
+            resultPre.textContent = '';
+            
+            try {
+                // Test if we can read the file
+                const reader = new FileReader();
+                await new Promise((resolve, reject) => {
+                    reader.onload = resolve;
+                    reader.onerror = reject;
+                    reader.readAsDataURL(file);
+                });
+                
+                statusDiv.className = 'status success';
+                statusDiv.textContent = '✅ Image can be read successfully';
+                resultPre.textContent = `File: ${file.name}\nSize: ${(file.size / 1024).toFixed(2)} KB\nType: ${file.type}\n\nNote: Actual upload requires authentication. This test confirms the file is readable.`;
+            } catch (err) {
+                statusDiv.className = 'status error';
+                statusDiv.textContent = '❌ Failed to read image';
+                resultPre.textContent = err.message;
+            }
+        }
+        
+        // Run tests on load
+        document.addEventListener('DOMContentLoaded', runTests);
+    </script>
+</body>
+</html>

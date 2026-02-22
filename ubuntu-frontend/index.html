@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ubuntu Travels - Explore East Africa</title>
+
+  <link rel="shortcut icon" href="./favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="./assets/css/style.css?v=4">
+  <link rel="stylesheet" href="./assets/css/tours-wireframe.css?v=2">
+  <link rel="stylesheet" href="./assets/css/guides-section.css?v=2">
+  <link rel="stylesheet" href="./assets/css/brand-colors.css?v=2">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Abril+Fatface&family=Comforter+Brush&family=Heebo:wght@400;500;600;700&family=Poppins:wght@400;600;700;800&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
+</head>
+
+<body id="top">
+
+<!-- HEADER -->
+<header class="header" data-header>
+  <div class="container">
+
+    <a href="./index.html" style="text-decoration: none;">
+      <h1 class="logo">
+        <ion-icon name="paw-outline" class="logo-icon"></ion-icon>
+        <div class="logo-text">
+          <span class="logo-main">Ubuntu Travels</span>
+          <span class="logo-tagline">Explore East Africa</span>
+        </div>
+      </h1>
+    </a>
+
+    <button class="nav-toggle-btn" data-nav-toggle-btn aria-label="Toggle Menu">
+      <ion-icon name="menu-outline" class="open"></ion-icon>
+      <ion-icon name="close-outline" class="close"></ion-icon>
+    </button>
+
+    <nav class="navbar">
+      <ul class="navbar-list">
+      </ul>
+
+      <div style="display: flex; gap: 12px; align-items: center;">
+        <!-- Plan Your Trip Button -->
+        <a href="./plan-trip.html" class="btn btn-primary" style="background: var(--white-1); color: var(--viridian-green); border: 2px solid var(--viridian-green); font-weight: 600; display: flex; align-items: center; gap: 6px;">
+          <ion-icon name="map-outline" style="font-size:18px;"></ion-icon>
+          Plan Your Trip
+        </a>
+
+        <!-- Profile Link -->
+        <a href="./auth.html" class="btn btn-secondary" style="display: flex; align-items: center; gap: 8px;">
+          <ion-icon name="person-circle-outline" style="font-size:20px;"></ion-icon>
+          Sign In
+        </a>
+      </div>
+    </nav>
+
+  </div>
+</header>
+
+<main>
+  <article>
+
+    <!-- HERO -->
+    <section class="section hero hero-ubuntu" style="background-image: url('./assets/images/hero-ubuntu.jpg');">
+
+      <div class="hero-overlay"></div>
+
+      <div class="container hero-ubuntu-inner">
+
+        <img src="./assets/images/shape-1.png" width="61" height="61" alt="Vector Shape" class="shape shape-1">
+        <img src="./assets/images/shape-2.png" width="56" height="74" alt="Vector Shape" class="shape shape-2">
+        <img src="./assets/images/shape-3.png" width="57" height="72" alt="Vector Shape" class="shape shape-3">
+
+        <div class="hero-content">
+          <p class="section-subtitle">Explore East Africa</p>
+
+          <h2 class="hero-title hero-title-light">Book Tours with Local Guides</h2>
+
+          <p class="hero-text hero-text-light">
+            Ubuntu Travels is your “Airbnb for tours” — local guides list experiences, travelers book instantly.
+          </p>
+
+          <div class="btn-group">
+            <a href="./plan-trip.html" class="btn btn-primary">Plan Your Trip</a>
+            <a href="./auth.html?role=guide" class="btn btn-outline hero-outline">Become a Tour Guide</a>
+          </div>
+        </div>
+
+        <div class="hero-badge">
+          <div class="hero-badge-title">Start in minutes</div>
+          <div class="hero-badge-sub">Discover Rwanda • Uganda • Tanzania • Kenya</div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- COUNTRIES -->
+    <section class="section destination" id="countries">
+      <div class="container">
+
+        <p class="section-subtitle">Countries</p>
+        <h2 class="h2 section-title">Browse by Country</h2>
+
+        <ul class="destination-list destination-row">
+
+          <li class="country-item">
+            <a href="./country.html?c=Rwanda" class="destination-card">
+              <figure class="card-banner">
+                <img src="./assets/images/destination-1.jpg" width="1140" height="1100" loading="lazy" alt="Rwanda"
+                     class="img-cover">
+              </figure>
+              <div class="card-content">
+                <p class="card-subtitle">Country</p>
+                <h3 class="h3 card-title">Rwanda</h3>
+              </div>
+            </a>
+          </li>
+
+          <li class="country-item">
+            <a href="./country.html?c=Uganda" class="destination-card">
+              <figure class="card-banner">
+                <img src="./assets/images/destination-2.jpg" width="1140" height="1100" loading="lazy" alt="Uganda"
+                     class="img-cover">
+              </figure>
+              <div class="card-content">
+                <p class="card-subtitle">Country</p>
+                <h3 class="h3 card-title">Uganda</h3>
+              </div>
+            </a>
+          </li>
+
+          <li class="country-item">
+            <a href="./country.html?c=Tanzania" class="destination-card">
+              <figure class="card-banner">
+                <img src="./assets/images/destination-3.jpg" width="1110" height="480" loading="lazy" alt="Tanzania"
+                     class="img-cover">
+              </figure>
+              <div class="card-content">
+                <p class="card-subtitle">Country</p>
+                <h3 class="h3 card-title">Tanzania</h3>
+              </div>
+            </a>
+          </li>
+
+          <li class="country-item">
+            <a href="./country.html?c=Kenya" class="destination-card">
+              <figure class="card-banner">
+                <img src="./assets/images/destination-4.jpg" width="1110" height="480" loading="lazy" alt="Kenya"
+                     class="img-cover">
+              </figure>
+              <div class="card-content">
+                <p class="card-subtitle">Country</p>
+                <h3 class="h3 card-title">Kenya</h3>
+              </div>
+            </a>
+          </li>
+
+        </ul>
+
+      </div>
+    </section>
+
+    <!-- FEATURED TOURS SECTION REMOVED -->
+
+    <!-- TOURS WORTH TAKING -->
+    <section class="section tours-section" id="tours">
+      <div class="container">
+        
+        <p class="tours-label">Curated</p>
+        <h2 class="tours-main-title">Tours worth taking</h2>
+        <p class="tours-subtitle">Each tour is led by someone who lives the place, knows the rhythms, understands what matters</p>
+
+        <div id="toursGrid" class="tours-grid">
+          <!-- Tours will be loaded here dynamically -->
+        </div>
+
+        <div class="tours-view-all">
+          <a href="./tours.html" class="btn-view-all">View all tours</a>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- VERIFIED LOCAL GUIDES SECTION -->
+    <section class="guides-section">
+      <div class="guides-container">
+        <div class="guides-header">
+          <p class="section-label">Guides</p>
+          <h2 class="section-heading">Verified local guides</h2>
+          <p class="section-subtext">
+            Meet guides who live and breathe Rwanda's trails and stories.
+          </p>
+        </div>
+        
+        <!-- Loading State -->
+        <div class="guides-loading" id="guidesLoading">
+          <p>Loading guides...</p>
+        </div>
+        
+        <!-- Error State -->
+        <div class="guides-error" id="guidesError" style="display:none;">
+          <p>Unable to load guides. Please try again later.</p>
+        </div>
+        
+        <!-- Empty State -->
+        <div class="guides-empty" id="guidesEmpty" style="display:none;"></div>
+        
+        <!-- Grid -->
+        <div class="guides-grid" id="guidesGrid" style="display:none;"></div>
+        
+        <!-- View All Button -->
+        <div class="guides-view-all" id="guidesViewAll" style="display:none; text-align: center; margin-top: 40px;">
+            <a href="./all-guides.html" class="btn-view-all-guides">View All of Our Vetted Guides</a>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- ABOUT -->
+    <section class="section about" id="about">
+      <div class="container">
+
+        <div class="about-content">
+          <p class="section-subtitle">About Us</p>
+          <h2 class="h2 section-title">Explore East Africa with local experts.</h2>
+
+          <p class="about-text">
+            Ubuntu Travels helps local guides create experiences and gives tourists a fast, safe booking flow.
+          </p>
+
+          <ul class="about-list">
+            <li class="about-item">
+              <div class="about-item-icon"><ion-icon name="compass"></ion-icon></div>
+              <div class="about-item-content">
+                <h3 class="h3 about-item-title">Local guides</h3>
+                <p class="about-item-text">Real people, real experiences, curated by the community.</p>
+              </div>
+            </li>
+
+            <li class="about-item">
+              <div class="about-item-icon"><ion-icon name="briefcase"></ion-icon></div>
+              <div class="about-item-content">
+                <h3 class="h3 about-item-title">Transparent pricing</h3>
+                <p class="about-item-text">No hidden fees — clear prices and clear tour details.</p>
+              </div>
+            </li>
+
+            <li class="about-item">
+              <div class="about-item-icon"><ion-icon name="umbrella"></ion-icon></div>
+              <div class="about-item-content">
+                <h3 class="h3 about-item-title">Reliable booking</h3>
+                <p class="about-item-text">Book in seconds — confirmations are managed by the platform.</p>
+              </div>
+            </li>
+          </ul>
+
+          <a href="./plan-trip.html" class="btn btn-primary">Plan Your Trip</a>
+        </div>
+
+        <figure class="about-banner">
+          <img src="./assets/images/about-banner.png" width="756" height="842" loading="lazy" alt="" class="w-100">
+        </figure>
+
+      </div>
+    </section>
+
+    <!-- CONTACT -->
+    <section class="section" id="contact" style="padding: 40px 0;">
+      <div class="container">
+        <p class="section-subtitle">Contact</p>
+        <h2 class="h2 section-title">Get in touch</h2>
+        <p>Use the links below in the footer or add your real contact form here.</p>
+      </div>
+    </section>
+
+  </article>
+</main>
+
+<!-- FOOTER -->
+<footer class="footer" style="background-image: url('./assets/images/footer-bg.png')">
+  <div class="container">
+
+    <div class="footer-top">
+
+      <ul class="footer-list">
+        <li>
+          <p class="footer-list-title">Top destination</p>
+        </li>
+        <li><a href="./country.html?c=Rwanda" class="footer-link">Rwanda</a></li>
+        <li><a href="./country.html?c=Uganda" class="footer-link">Uganda</a></li>
+        <li><a href="./country.html?c=Kenya" class="footer-link">Kenya</a></li>
+        <li><a href="./country.html?c=Tanzania" class="footer-link">Tanzania</a></li>
+      </ul>
+
+      <ul class="footer-list">
+        <li>
+          <p class="footer-list-title">Categories</p>
+        </li>
+        <li><a href="#tours" class="footer-link">Travel</a></li>
+        <li><a href="#about" class="footer-link">Lifestyle</a></li>
+        <li><a href="#contact" class="footer-link">Food & Drink</a></li>
+      </ul>
+
+      <ul class="footer-list">
+        <li>
+          <p class="footer-list-title">Quick links</p>
+        </li>
+        <li><a href="#about" class="footer-link">About</a></li>
+        <li><a href="#contact" class="footer-link">Contact</a></li>
+        <li><a href="#countries" class="footer-link">Countries</a></li>
+        <li><a href="#" class="footer-link">Terms & Conditions</a></li>
+      </ul>
+
+      <div class="footer-list">
+        <p class="footer-list-title">Get a newsletter</p>
+        <p class="newsletter-text">For the latest deals and tips, travel no further than your inbox</p>
+
+        <form action="" class="newsletter-form">
+          <input type="email" name="email" required placeholder="Email address" class="newsletter-input">
+          <button type="submit" class="btn btn-primary">Subscribe</button>
+        </form>
+
+        <p id="newsletterMsg" style="margin-top:10px; font-weight:700;"></p>
+      </div>
+
+    </div>
+
+    <div class="footer-bottom">
+      <a href="./index.html" class="logo">Ubuntu Travels</a>
+
+      <p class="copyright">
+        &copy; 2026 <a href="#" class="copyright-link">Ubuntu Travels</a>. All Rights Reserved
+      </p>
+
+      <ul class="social-list">
+        <li><a href="#" class="social-link"><ion-icon name="logo-facebook"></ion-icon></a></li>
+        <li><a href="#" class="social-link"><ion-icon name="logo-twitter"></ion-icon></a></li>
+        <li><a href="#" class="social-link"><ion-icon name="logo-instagram"></ion-icon></a></li>
+        <li><a href="#" class="social-link"><ion-icon name="logo-linkedin"></ion-icon></a></li>
+      </ul>
+    </div>
+
+  </div>
+</footer>
+
+<a href="#top" class="go-top" data-go-top aria-label="Go To Top">
+  <ion-icon name="chevron-up-outline"></ion-icon>
+</a>
+
+<!-- ✅ FIX: Shared API config must load FIRST -->
+<script src="./assets/js/config.js"></script>
+
+<script src="./assets/js/script.js"></script>
+<script src="./assets/js/newsletter.js"></script>
+
+<!-- Load tours wireframe -->
+<script src="./assets/js/tours-wireframe.js?v=2"></script>
+
+<!-- Load guides section -->
+<script src="./assets/js/guides.js?v=2"></script>
+
+<!-- keep this last if it injects layout bits -->
+<script src="./assets/js/site-shell.js"></script>
+
+<script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+<script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+
+</body>
+
+</html>

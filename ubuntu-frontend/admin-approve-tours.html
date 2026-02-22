@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Tourest Admin — Approve Tours</title>
+
+    <link rel="shortcut icon" href="./favicon.svg" type="image/svg+xml">
+    <link rel="stylesheet" href="./assets/css/style.css">
+    <link rel="stylesheet" href="./assets/css/brand-colors.css">
+</head>
+
+<body id="top">
+
+<header class="header" data-header>
+    <div class="container">
+        <a href="./index.html"><h1 class="logo">Admin — Tours</h1></a>
+
+        <nav class="navbar" style="all: unset; display:flex; gap:12px; align-items:center;">
+            <a href="./admin.html" class="btn btn-secondary">Tours Editor</a>
+            <a href="./admin-bookings.html" class="btn btn-secondary">Bookings</a>
+            <a href="./index.html" class="btn btn-secondary">Website</a>
+        </nav>
+    </div>
+</header>
+
+<main>
+    <article>
+        <section class="section" style="padding-top:120px;">
+            <div class="container">
+
+                <div class="popular-card" style="padding:18px;">
+                    <h2 class="h2 section-title" style="margin-bottom:10px;">Admin Access</h2>
+                    <p style="color: var(--black-coral);">Uses <strong>ADMIN_TOKEN</strong> saved in your browser.</p>
+
+                    <div style="display:flex; gap:10px; flex-wrap:wrap; margin-top:12px;">
+                        <input id="tokenInput" class="newsletter-input" placeholder="Paste ADMIN_TOKEN here" style="flex:1; min-width:260px;">
+                        <button class="btn btn-primary" id="saveTokenBtn">Save Token</button>
+                        <button class="btn btn-outline" id="clearTokenBtn">Clear</button>
+                    </div>
+
+                    <p id="tokenMsg" style="margin-top:10px; font-weight:800;"></p>
+                </div>
+
+                <div style="height:18px;"></div>
+
+                <div class="popular-card" style="padding:18px;">
+                    <div style="display:flex; gap:10px; flex-wrap:wrap; align-items:center;">
+                        <select id="status" class="newsletter-input" style="max-width:260px;">
+                            <option value="pending">Pending</option>
+                            <option value="approved">Approved</option>
+                            <option value="rejected">Rejected</option>
+                            <option value="draft">Draft</option>
+                            <option value="">All</option>
+                        </select>
+
+                        <button class="btn btn-primary" id="loadBtn">Load Tours</button>
+                    </div>
+
+                    <p id="msg" style="margin-top:10px; font-weight:800;"></p>
+
+                    <div id="grid" style="margin-top:14px; display:grid; gap:14px;"></div>
+                </div>
+
+            </div>
+        </section>
+    </article>
+</main>
+
+<script src="./assets/js/script.js"></script>
+<script src="./assets/js/app-config.js"></script>
+<script src="./assets/js/admin-approve-tours.js"></script>
+
+<script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+<script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+</body>
+</html>

@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign In — Ubuntu Travels</title>
+    
+    <link rel="shortcut icon" href="./favicon.svg" type="image/svg+xml">
+    <link rel="stylesheet" href="./assets/css/modern-theme.css">
+    
+    <style>
+        .auth-container {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: var(--space-lg);
+        }
+        
+        .auth-card {
+            background: var(--surface);
+            border-radius: var(--radius-lg);
+            padding: var(--space-2xl);
+            max-width: 480px;
+            width: 100%;
+            box-shadow: var(--shadow-xl);
+        }
+        
+        .auth-header {
+            text-align: center;
+            margin-bottom: var(--space-xl);
+        }
+        
+        .auth-logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: var(--space-sm);
+            margin-bottom: var(--space-lg);
+            text-decoration: none;
+        }
+        
+        .auth-tabs {
+            display: flex;
+            gap: var(--space-sm);
+            margin-bottom: var(--space-xl);
+            background: var(--surface-alt);
+            padding: 4px;
+            border-radius: var(--radius-md);
+        }
+        
+        .auth-tab {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            background: transparent;
+            border-radius: var(--radius-sm);
+            font-weight: 600;
+            font-size: 14px;
+            color: var(--text-muted);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .auth-tab.active {
+            background: var(--surface);
+            color: var(--primary);
+            box-shadow: var(--shadow-sm);
+        }
+        
+        .auth-form {
+            display: none;
+        }
+        
+        .auth-form.active {
+            display: block;
+        }
+        
+        .divider {
+            display: flex;
+            align-items: center;
+            gap: var(--space-md);
+            margin: var(--space-lg) 0;
+            color: var(--text-muted);
+            font-size: 14px;
+        }
+        
+        .divider::before,
+        .divider::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: var(--border);
+        }
+    </style>
+    <link rel="stylesheet" href="./assets/css/brand-colors.css">
+</head>
+<body>
+
+<div class="auth-container">
+    <div class="auth-card">
+        <div class="auth-header">
+            <a href="./index-modern.html" class="auth-logo">
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="#E3702D">
+                    <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
+                </svg>
+                <span class="logo-text">Ubuntu Travels</span>
+            </a>
+            <h1 style="font-size: 28px; margin-bottom: var(--space-sm);">Welcome Back</h1>
+            <p style="color: var(--text-muted);">Sign in to your account or create a new one</p>
+        </div>
+        
+        <!-- Tabs -->
+        <div class="auth-tabs">
+            <button class="auth-tab active" onclick="switchTab('login')">Sign In</button>
+            <button class="auth-tab" onclick="switchTab('register')">Sign Up</button>
+        </div>
+        
+        <!-- Login Form -->
+        <form id="loginForm" class="auth-form active" onsubmit="handleLogin(event)">
+            <div class="form-group">
+                <label class="form-label">Email <span class="required">*</span></label>
+                <input type="email" name="email" class="form-input" required placeholder="you@example.com">
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label">Password <span class="required">*</span></label>
+                <input type="password" name="password" class="form-input" required placeholder="••••••••">
+            </div>
+            
+            <button type="submit" class="btn btn-primary btn-block btn-lg" id="loginBtn">
+                Sign In
+            </button>
+            
+            <p id="loginMsg" class="text-center" style="margin-top: var(--space-md); font-size: 14px;"></p>
+        </form>
+        
+        <!-- Register Form -->
+        <form id="registerForm" class="auth-form" onsubmit="handleRegister(event)">
+            <div class="form-group">
+                <label class="form-label">I want to <span class="required">*</span></label>
+                <select name="role" class="form-select" required>
+                    <option value="tourist">Book tours (Tourist)</option>
+                    <option value="guide">Offer tours (Guide)</option>
+                </select>
+            </div>
+            
+            <div class="grid grid-2">
+                <div class="form-group">
+                    <label class="form-label">First Name <span class="required">*</span></label>
+                    <input type="text" name="firstName" class="form-input" required>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Last Name <span class="required">*</span></label>
+                    <input type="text" name="lastName" class="form-input" required>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label">Email <span class="required">*</span></label>
+                <input type="email" name="email" class="form-input" required placeholder="you@example.com">
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label">Password <span class="required">*</span></label>
+                <input type="password" name="password" class="form-input" required placeholder="Min. 8 characters">
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label">Phone <span class="required">*</span></label>
+                <input type="tel" name="phone" class="form-input" required placeholder="+250 788 000 000">
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label">Country <span class="required">*</span></label>
+                <select name="country" class="form-select" required>
+                    <option value="">Select country...</option>
+                    <option value="Rwanda">Rwanda</option>
+                    <option value="Uganda">Uganda</option>
+                    <option value="Tanzania">Tanzania</option>
+                    <option value="Kenya">Kenya</option>
+                    <option value="Burundi">Burundi</option>
+                    <option value="Other">Other</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label style="display: flex; align-items: center; gap: var(--space-sm); cursor: pointer;">
+                    <input type="checkbox" name="terms" required style="accent-color: var(--primary);">
+                    <span style="font-size: 14px; color: var(--text-secondary);">
+                        I agree to the Terms & Conditions
+                    </span>
+                </label>
+            </div>
+            
+            <button type="submit" class="btn btn-primary btn-block btn-lg" id="registerBtn">
+                Create Account
+            </button>
+            
+            <p id="registerMsg" class="text-center" style="margin-top: var(--space-md); font-size: 14px;"></p>
+        </form>
+        
+        <div class="divider">OR</div>
+        
+        <div class="text-center">
+            <p style="font-size: 14px; color: var(--text-muted); margin-bottom: var(--space-sm);">
+                Are you an admin?
+            </p>
+            <a href="./admin-login.html" style="color: var(--primary); font-weight: 600; font-size: 14px; text-decoration: none;">
+                Admin Login →
+            </a>
+        </div>
+    </div>
+</div>
+
+<script src="./assets/js/config.js"></script>
+<script>
+    // Switch tabs
+    function switchTab(tab) {
+        // Update tab buttons
+        document.querySelectorAll('.auth-tab').forEach(btn => {
+            btn.classList.remove('active');
+        });
+        event.target.classList.add('active');
+        
+        // Update forms
+        document.querySelectorAll('.auth-form').forEach(form => {
+            form.classList.remove('active');
+        });
+        
+        if (tab === 'login') {
+            document.getElementById('loginForm').classList.add('active');
+        } else {
+            document.getElementById('registerForm').classList.add('active');
+        }
+    }
+    
+    // Handle login
+    async function handleLogin(e) {
+        e.preventDefault();
+        
+        const btn = document.getElementById('loginBtn');
+        const msg = document.getElementById('loginMsg');
+        const form = e.target;
+        
+        btn.disabled = true;
+        btn.textContent = 'Signing in...';
+        msg.textContent = '';
+        
+        try {
+            const res = await fetch(`${API_BASE}/api/auth/login`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    email: form.email.value,
+                    password: form.password.value
+                })
+            });
+            
+            const data = await res.json();
+            
+            if (!data.ok) {
+                throw new Error(data.message || 'Login failed');
+            }
+            
+            // Store token
+            localStorage.setItem('token', data.token);
+            localStorage.setItem('user', JSON.stringify(data.user));
+            
+            msg.style.color = 'var(--success)';
+            msg.textContent = '✅ Success! Redirecting...';
+            
+            // Redirect based on role
+            setTimeout(() => {
+                if (data.user.role === 'guide') {
+                    window.location.href = './guide-dashboard.html';
+                } else {
+                    window.location.href = './index-modern.html';
+                }
+            }, 1000);
+            
+        } catch (err) {
+            msg.style.color = 'var(--error)';
+            msg.textContent = '❌ ' + err.message;
+            btn.disabled = false;
+            btn.textContent = 'Sign In';
+        }
+    }
+    
+    // Handle register
+    async function handleRegister(e) {
+        e.preventDefault();
+        
+        const btn = document.getElementById('registerBtn');
+        const msg = document.getElementById('registerMsg');
+        const form = e.target;
+        
+        btn.disabled = true;
+        btn.textContent = 'Creating account...';
+        msg.textContent = '';
+        
+        try {
+            const res = await fetch(`${API_BASE}/api/auth/register`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    role: form.role.value,
+                    firstName: form.firstName.value,
+                    lastName: form.lastName.value,
+                    email: form.email.value,
+                    password: form.password.value,
+                    phone: form.phone.value,
+                    country: form.country.value,
+                    termsAccepted: form.terms.checked
+                })
+            });
+            
+            const data = await res.json();
+            
+            if (!data.ok) {
+                throw new Error(data.message || 'Registration failed');
+            }
+            
+            // Store token
+            localStorage.setItem('token', data.token);
+            localStorage.setItem('user', JSON.stringify(data.user));
+            
+            msg.style.color = 'var(--success)';
+            msg.textContent = '✅ Account created! Redirecting...';
+            
+            // Redirect based on role
+            setTimeout(() => {
+                if (data.user.role === 'guide') {
+                    window.location.href = './guide-dashboard.html';
+                } else {
+                    window.location.href = './index-modern.html';
+                }
+            }, 1000);
+            
+        } catch (err) {
+            msg.style.color = 'var(--error)';
+            msg.textContent = '❌ ' + err.message;
+            btn.disabled = false;
+            btn.textContent = 'Create Account';
+        }
+    }
+    
+    // Check URL params for role
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get('role') === 'guide') {
+        switchTab('register');
+        document.querySelector('[name="role"]').value = 'guide';
+    }
+</script>
+
+</body>
+</html>

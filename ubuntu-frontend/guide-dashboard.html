@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Guide Dashboard — Ubuntu Travels</title>
+
+    <link rel="shortcut icon" href="./favicon.svg" type="image/svg+xml">
+    <link rel="stylesheet" href="./assets/css/style.css">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Abril+Fatface&family=Comforter+Brush&family=Heebo:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        .approval-warning {
+            background: #fff3cd;
+            border-left: 4px solid #ff9800;
+            padding: 15px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+        }
+        
+        .approval-warning ion-icon {
+            font-size: 2.4rem;
+            vertical-align: middle;
+            color: #ff9800;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .stat-box {
+            background: var(--white-2);
+            padding: 15px;
+            border-radius: 6px;
+            text-align: center;
+        }
+        
+        .stat-number {
+            font-size: 2.4rem;
+            font-weight: 700;
+            color: var(--viridian-green);
+        }
+        
+        .stat-label {
+            font-size: 1.3rem;
+            color: var(--black-coral);
+            margin-top: 5px;
+        }
+        
+        .itinerary-day {
+            background: var(--white-2);
+            padding: 15px;
+            border-radius: 6px;
+            margin-bottom: 10px;
+        }
+        
+        .itinerary-day h4 {
+            margin-bottom: 8px;
+            color: var(--viridian-green);
+        }
+        
+        .form-group {
+            display: grid;
+            gap: 8px;
+        }
+        
+        .form-label {
+            font-weight: 600;
+            color: var(--black-coral);
+            font-size: 1.4rem;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .form-label .required {
+            color: #ff4444;
+        }
+        
+        .form-help {
+            font-size: 1.2rem;
+            color: var(--battleship-gray);
+            margin-top: -5px;
+        }
+        
+        .char-counter {
+            font-size: 1.2rem;
+            color: var(--battleship-gray);
+            text-align: right;
+        }
+        
+        .char-counter.warning {
+            color: #ff9800;
+        }
+        
+        .char-counter.error {
+            color: #ff4444;
+        }
+        
+        .image-upload-area {
+            border: 2px dashed var(--light-gray);
+            border-radius: 6px;
+            padding: 30px;
+            text-align: center;
+            background: var(--white-2);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .image-upload-area:hover {
+            border-color: var(--viridian-green);
+            background: white;
+        }
+        
+        .image-upload-area.dragover {
+            border-color: var(--viridian-green);
+            background: #e8f5e9;
+        }
+        
+        .image-preview {
+            margin-top: 15px;
+            position: relative;
+            display: inline-block;
+        }
+        
+        .image-preview img {
+            max-width: 100%;
+            max-height: 300px;
+            border-radius: 6px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        .image-preview .remove-image {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: #ff4444;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 32px;
+            height: 32px;
+            cursor: pointer;
+            font-size: 1.8rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+        
+        .upload-progress {
+            margin-top: 10px;
+            height: 4px;
+            background: var(--light-gray);
+            border-radius: 2px;
+            overflow: hidden;
+            display: none;
+        }
+        
+        .upload-progress-bar {
+            height: 100%;
+            background: var(--viridian-green);
+            transition: width 0.3s ease;
+        }
+        
+        .form-section {
+            padding: 20px;
+            background: var(--white-2);
+            border-radius: 6px;
+            margin-bottom: 20px;
+        }
+        
+        .form-section-title {
+            font-size: 1.6rem;
+            font-weight: 600;
+            color: var(--viridian-green);
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+    </style>
+    <link rel="stylesheet" href="./assets/css/brand-colors.css">
+</head>
+
+<body id="top">
+<header class="header" data-header>
+    <div class="container">
+        <a href="./index.html" style="text-decoration: none;">
+            <h1 class="logo">
+                <ion-icon name="paw-outline" class="logo-icon"></ion-icon>
+                <div class="logo-text">
+                    <span class="logo-main">Ubuntu Travels</span>
+                    <span class="logo-tagline">Guide Dashboard</span>
+                </div>
+            </h1>
+        </a>
+
+        <button class="nav-toggle-btn" data-nav-toggle-btn aria-label="Toggle Menu">
+            <ion-icon name="menu-outline" class="open"></ion-icon>
+            <ion-icon name="close-outline" class="close"></ion-icon>
+        </button>
+
+        <nav class="navbar">
+            <ul class="navbar-list">
+            </ul>
+
+            <div style="display: flex; gap: 12px; align-items: center; margin-left: auto;">
+                <button class="btn btn-outline" id="logoutBtn" style="display: flex; align-items: center; gap: 8px;">
+                    <ion-icon name="log-out-outline" style="font-size:18px;"></ion-icon>
+                    Logout
+                </button>
+            </div>
+        </nav>
+    </div>
+</header>
+
+<main>
+    <article>
+        <section class="section" style="padding-top: 120px; padding-bottom: 60px;">
+            <div class="container">
+
+                <!-- Approval Status Warning -->
+                <div id="approvalWarning" style="display: none;" class="approval-warning">
+                    <ion-icon name="warning-outline"></ion-icon>
+                    <strong>Pending Approval:</strong> Your guide account is awaiting admin approval. You can create draft tours, but they won't be published until your account is approved.
+                </div>
+
+                <!-- Welcome Card -->
+                <div class="popular-card" style="padding: 30px; margin-bottom: 20px;">
+                    <div style="display: flex; justify-content: space-between; align-items: start; flex-wrap: wrap; gap: 15px; margin-bottom: 15px;">
+                        <div>
+                            <p class="section-subtitle">Welcome Back</p>
+                            <h2 class="h2 section-title" style="margin-bottom: 10px;">My Tours Dashboard</h2>
+                            <p style="color: var(--black-coral);">
+                                Create and manage tours for Rwanda, Uganda, Tanzania, and Kenya. All tours require admin approval before going live.
+                            </p>
+                        </div>
+                        <a href="./guide-profile.html" class="btn btn-primary" style="display: flex; align-items: center; gap: 8px; white-space: nowrap;">
+                            <ion-icon name="person-outline" style="font-size: 18px;"></ion-icon>
+                            Edit Profile
+                        </a>
+                    </div>
+                    
+                    <!-- Stats -->
+                    <div class="stats-grid" style="margin-top: 20px;">
+                        <div class="stat-box">
+                            <div class="stat-number" id="statTotal">0</div>
+                            <div class="stat-label">Total Tours</div>
+                        </div>
+                        <div class="stat-box">
+                            <div class="stat-number" id="statApproved">0</div>
+                            <div class="stat-label">Approved</div>
+                        </div>
+                        <div class="stat-box">
+                            <div class="stat-number" id="statPending">0</div>
+                            <div class="stat-label">Pending</div>
+                        </div>
+                        <div class="stat-box">
+                            <div class="stat-number" id="statDraft">0</div>
+                            <div class="stat-label">Drafts</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Create/Edit Form -->
+                <div class="popular-card" style="padding: 30px; margin-bottom: 20px;">
+                    <h3 class="h3" id="formTitle">Create New Tour</h3>
+                    <p style="color: var(--battleship-gray); margin-top: 8px; font-size: 1.3rem;">
+                        Fill in all required fields to create your tour. All tours require admin approval before going live.
+                    </p>
+
+                    <form id="tourForm" style="display: grid; gap: 20px; margin-top: 25px;">
+                        
+                        <!-- SECTION 1: Basic Information -->
+                        <div class="form-section">
+                            <div class="form-section-title">
+                                <ion-icon name="information-circle-outline"></ion-icon>
+                                Basic Information
+                            </div>
+                            
+                            <!-- Tour Title -->
+                            <div class="form-group">
+                                <label class="form-label">
+                                    Tour Title <span class="required">*</span>
+                                </label>
+                                <input class="newsletter-input" name="title" id="tourTitle" 
+                                       placeholder="e.g., Gorilla Trekking Adventure in Volcanoes National Park" 
+                                       minlength="10" maxlength="100" required>
+                                <div class="form-help">
+                                    Create an engaging title that describes your tour (10-100 characters)
+                                </div>
+                                <div class="char-counter" id="titleCounter">0 / 100</div>
+                            </div>
+
+                            <!-- URL Slug -->
+                            <div class="form-group">
+                                <label class="form-label">
+                                    URL Slug <span class="required">*</span>
+                                </label>
+                                <input class="newsletter-input" name="slug" id="tourSlug" 
+                                       placeholder="gorilla-trekking-adventure" 
+                                       pattern="[a-z0-9-]+" 
+                                       title="Only lowercase letters, numbers, and hyphens"
+                                       minlength="5" maxlength="80" required>
+                                <div class="form-help">
+                                    URL-friendly version (lowercase, hyphens only). Example: gorilla-trekking-rwanda
+                                </div>
+                            </div>
+
+                            <!-- Subtitle -->
+                            <div class="form-group">
+                                <label class="form-label">
+                                    Short Subtitle
+                                </label>
+                                <input class="newsletter-input" name="subtitle" id="tourSubtitle" 
+                                       placeholder="e.g., Experience the majestic mountain gorillas in their natural habitat" 
+                                       maxlength="150">
+                                <div class="form-help">
+                                    A catchy one-liner that appears below the title (optional, max 150 characters)
+                                </div>
+                                <div class="char-counter" id="subtitleCounter">0 / 150</div>
+                            </div>
+
+                            <!-- Location -->
+                            <div class="form-group">
+                                <label class="form-label">
+                                    Location <span class="required">*</span>
+                                </label>
+                                <input class="newsletter-input" name="location" id="tourLocation" 
+                                       placeholder="e.g., Volcanoes National Park, Rwanda" 
+                                       minlength="5" maxlength="100" required>
+                                <div class="form-help">
+                                    Specific location or region where the tour takes place
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- SECTION 2: Pricing & Duration -->
+                        <div class="form-section">
+                            <div class="form-section-title">
+                                <ion-icon name="cash-outline"></ion-icon>
+                                Pricing & Duration
+                            </div>
+                            
+                            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 15px;">
+                                <!-- Duration -->
+                                <div class="form-group">
+                                    <label class="form-label">
+                                        Duration (Days) <span class="required">*</span>
+                                    </label>
+                                    <input class="newsletter-input" name="durationDays" type="number" 
+                                           min="1" max="365" value="3" required>
+                                    <div class="form-help">
+                                        Number of days (1-365)
+                                    </div>
+                                </div>
+
+                                <!-- Price -->
+                                <div class="form-group">
+                                    <label class="form-label">
+                                        Price (USD) <span class="required">*</span>
+                                    </label>
+                                    <input class="newsletter-input" name="price" type="number" 
+                                           min="0" max="999999" step="0.01" value="100" required>
+                                    <div class="form-help">
+                                        Price per person in USD
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- SECTION 3: Tour Image -->
+                        <div class="form-section">
+                            <div class="form-section-title">
+                                <ion-icon name="image-outline"></ion-icon>
+                                Tour Image
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label">
+                                    Main Tour Image <span class="required">*</span>
+                                </label>
+                                
+                                <!-- Image Upload Area -->
+                                <div class="image-upload-area" id="imageUploadArea">
+                                    <input type="file" id="imageFileInput" accept="image/jpeg,image/jpg,image/png,image/webp" style="display: none;">
+                                    <ion-icon name="cloud-upload-outline" style="font-size: 4rem; color: var(--viridian-green);"></ion-icon>
+                                    <p style="margin-top: 10px; font-weight: 600; color: var(--black-coral);">
+                                        Click to upload or drag and drop
+                                    </p>
+                                    <p style="font-size: 1.2rem; color: var(--battleship-gray); margin-top: 5px;">
+                                        JPG, PNG, or WebP (Max 5MB) • Recommended: 1200x800px
+                                    </p>
+                                </div>
+                                
+                                <!-- Upload Progress -->
+                                <div class="upload-progress" id="uploadProgress">
+                                    <div class="upload-progress-bar" id="uploadProgressBar"></div>
+                                </div>
+                                
+                                <!-- Image Preview -->
+                                <div class="image-preview" id="imagePreview" style="display: none;">
+                                    <img id="previewImg" src="" alt="Tour preview">
+                                    <button type="button" class="remove-image" id="removeImageBtn" title="Remove image">×</button>
+                                </div>
+                                
+                                <!-- Hidden input for image URL -->
+                                <input type="hidden" name="imageUrl" id="imageUrl" required>
+                                
+                                <div class="form-help" style="margin-top: 10px;">
+                                    Upload a high-quality image that showcases your tour. Images are stored securely and optimized for fast loading.
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- SECTION 4: Countries -->
+                        <div class="form-section">
+                            <div class="form-section-title">
+                                <ion-icon name="location-outline"></ion-icon>
+                                Countries Covered
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label">
+                                    Select Countries <span class="required">*</span>
+                                </label>
+                                <div style="display: flex; gap: 15px; flex-wrap: wrap; margin-top: 10px;">
+                                    <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; padding: 8px 12px; background: white; border-radius: 4px; border: 2px solid var(--light-gray);">
+                                        <input type="checkbox" name="countries" value="Rwanda" style="width: auto; cursor: pointer;">
+                                        <span style="font-weight: 500;">🇷🇼 Rwanda</span>
+                                    </label>
+                                    <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; padding: 8px 12px; background: white; border-radius: 4px; border: 2px solid var(--light-gray);">
+                                        <input type="checkbox" name="countries" value="Uganda" style="width: auto; cursor: pointer;">
+                                        <span style="font-weight: 500;">🇺🇬 Uganda</span>
+                                    </label>
+                                    <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; padding: 8px 12px; background: white; border-radius: 4px; border: 2px solid var(--light-gray);">
+                                        <input type="checkbox" name="countries" value="Tanzania" style="width: auto; cursor: pointer;">
+                                        <span style="font-weight: 500;">🇹🇿 Tanzania</span>
+                                    </label>
+                                    <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; padding: 8px 12px; background: white; border-radius: 4px; border: 2px solid var(--light-gray);">
+                                        <input type="checkbox" name="countries" value="Kenya" style="width: auto; cursor: pointer;">
+                                        <span style="font-weight: 500;">🇰🇪 Kenya</span>
+                                    </label>
+                                </div>
+                                <div class="form-help">
+                                    Select at least one country where this tour operates
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- SECTION 5: Description -->
+                        <div class="form-section">
+                            <div class="form-section-title">
+                                <ion-icon name="document-text-outline"></ion-icon>
+                                Tour Description
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label">
+                                    Detailed Description <span class="required">*</span>
+                                </label>
+                                <textarea class="newsletter-input" name="description" id="tourDescription" 
+                                          placeholder="Describe your tour in detail. Include what makes it special, what travelers will experience, highlights, included services, and any important information..."
+                                          style="min-height: 180px; resize: vertical;" 
+                                          minlength="100" maxlength="2000" required></textarea>
+                                <div class="form-help">
+                                    Provide a comprehensive description of your tour (100-2000 characters). Include highlights, what's included, and what makes it unique.
+                                </div>
+                                <div class="char-counter" id="descriptionCounter">0 / 2000</div>
+                            </div>
+                        </div>
+
+                        <!-- SECTION 6: Itinerary -->
+                        <div class="form-section">
+                            <div class="form-section-title">
+                                <ion-icon name="calendar-outline"></ion-icon>
+                                Day-by-Day Itinerary
+                            </div>
+                            
+                            <div class="form-help" style="margin-bottom: 15px;">
+                                Create a detailed daily schedule for your tour. Each day should have a title and description of activities.
+                            </div>
+                            
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                                <p style="font-weight: 600; color: var(--black-coral);">Add Days</p>
+                                <button type="button" class="btn btn-outline" id="addDayBtn">
+                                    <ion-icon name="add-circle-outline" style="vertical-align: middle;"></ion-icon>
+                                    Add Day
+                                </button>
+                            </div>
+                            
+                            <div id="itineraryContainer"></div>
+                        </div>
+
+                        <!-- Form Actions -->
+                        <div style="display: flex; gap: 12px; flex-wrap: wrap; margin-top: 20px; padding-top: 20px; border-top: 2px solid var(--light-gray);">
+                            <button class="btn btn-primary" type="submit" style="min-width: 180px;">
+                                <ion-icon name="save-outline" style="vertical-align: middle;"></ion-icon>
+                                Save Tour
+                            </button>
+                            <button class="btn btn-outline" type="button" id="resetBtn" style="min-width: 150px;">
+                                <ion-icon name="close-circle-outline" style="vertical-align: middle;"></ion-icon>
+                                Cancel / Reset
+                            </button>
+                        </div>
+
+                        <p id="msg" style="margin-top: 10px; font-weight: 600; text-align: center;"></p>
+                    </form>
+                </div>
+
+                <!-- Tours List -->
+                <div class="popular-card" style="padding: 30px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; margin-bottom: 20px;">
+                        <h3 class="h3">Your Tours</h3>
+                        <button class="btn btn-primary" id="reloadBtn">Refresh</button>
+                    </div>
+
+                    <div id="grid" style="display: grid; gap: 20px;"></div>
+                </div>
+
+            </div>
+        </section>
+    </article>
+</main>
+
+<script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+<script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+
+<script src="./assets/js/app-config.js"></script>
+<script src="./assets/js/guide-dashboard.js"></script>
+
+<script>
+// Logout functionality
+document.getElementById('logoutBtn').addEventListener('click', () => {
+    localStorage.removeItem('AUTH_TOKEN');
+    localStorage.removeItem('SAVED_EMAIL');
+    localStorage.removeItem('REMEMBER_ME');
+    window.location.href = './auth.html';
+});
+</script>
+
+</body>
+</html>

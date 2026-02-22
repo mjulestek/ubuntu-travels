@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Guide Bio — Ubuntu Travels</title>
+    
+    <link rel="shortcut icon" href="./favicon.svg" type="image/svg+xml">
+    <link rel="stylesheet" href="./assets/css/style.css">
+    <link rel="stylesheet" href="./assets/css/brand-colors.css">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+    
+    <style>
+        body {
+            background: #FFFFFF;
+        }
+        
+        /* ── BIO NAV ── */
+        .bio-nav {
+            background: #FFF7EB;
+            padding: 20px 40px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            border-bottom: 1px solid rgba(0,0,0,0.07);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .back-btn {
+            background: none;
+            border: none;
+            color: #E3702D;
+            font-family: 'DM Sans', sans-serif;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 0;
+            transition: color 0.2s;
+        }
+        
+        .back-btn:hover {
+            color: #c95c20;
+        }
+        
+        /* ── BIO HERO ── */
+        .bio-hero {
+            background: #FFF7EB;
+            padding: 64px 40px 0;
+            display: flex;
+            gap: 56px;
+            align-items: flex-end;
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+        
+        @media (max-width: 768px) {
+            .bio-hero {
+                flex-direction: column;
+                padding: 40px 24px 0;
+                gap: 32px;
+            }
+        }
+        
+        .bio-photo {
+            width: 260px;
+            height: 320px;
+            object-fit: cover;
+            object-position: top;
+            border-radius: 16px 16px 0 0;
+            flex-shrink: 0;
+            box-shadow: 0 8px 40px rgba(0,0,0,0.12);
+        }
+        
+        .bio-photo-placeholder {
+            width: 260px;
+            height: 320px;
+            background: linear-gradient(135deg, #e8ddd0 0%, #d4c5b0 100%);
+            border-radius: 16px 16px 0 0;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .bio-intro-block {
+            padding-bottom: 40px;
+            flex: 1;
+        }
+        
+        .bio-verified-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(227, 112, 45, 0.12);
+            color: #E3702D;
+            font-size: 0.78rem;
+            font-weight: 600;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            padding: 6px 14px;
+            border-radius: 100px;
+            margin-bottom: 20px;
+        }
+        
+        .bio-name {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(2rem, 4vw, 3rem);
+            font-weight: 900;
+            color: #1a1a1a;
+            line-height: 1.1;
+            margin-bottom: 16px;
+        }
+        
+        .bio-short-intro {
+            font-size: 1.05rem;
+            color: #6b6b6b;
+            line-height: 1.65;
+            margin-bottom: 32px;
+            max-width: 480px;
+        }
+        
+        .bio-meta {
+            display: flex;
+            gap: 32px;
+            flex-wrap: wrap;
+            margin-bottom: 36px;
+        }
+        
+        .bio-meta-item {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+        
+        .bio-meta-label {
+            font-size: 0.75rem;
+            font-weight: 600;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: #6b6b6b;
+        }
+        
+        .bio-meta-value {
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: #1a1a1a;
+        }
+        
+        .bio-cta-btn {
+            display: inline-block;
+            background: #E3702D;
+            color: #FFFFFF;
+            font-family: 'DM Sans', sans-serif;
+            font-size: 1rem;
+            font-weight: 600;
+            padding: 14px 32px;
+            border-radius: 100px;
+            border: none;
+            cursor: pointer;
+            text-decoration: none;
+            transition: background 0.2s, transform 0.15s;
+            letter-spacing: 0.01em;
+        }
+        
+        .bio-cta-btn:hover {
+            background: #c95c20;
+            transform: translateY(-2px);
+        }
+        
+        /* ── BIO CONTENT ── */
+        .bio-content-area {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 64px 40px;
+            display: grid;
+            grid-template-columns: 1fr 320px;
+            gap: 64px;
+        }
+        
+        @media (max-width: 900px) {
+            .bio-content-area {
+                grid-template-columns: 1fr;
+                padding: 40px 24px;
+            }
+        }
+        
+        .bio-section-label {
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            color: #E3702D;
+            margin-bottom: 16px;
+        }
+        
+        .bio-section-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #1a1a1a;
+            margin-bottom: 20px;
+        }
+        
+        .bio-full-text {
+            font-size: 1rem;
+            line-height: 1.8;
+            color: #444;
+        }
+        
+        .bio-full-text p + p {
+            margin-top: 16px;
+        }
+        
+        .bio-sidebar {
+            background: #FFF7EB;
+            border-radius: 16px;
+            padding: 32px;
+            height: fit-content;
+        }
+        
+        .bio-sidebar h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #1a1a1a;
+            margin-bottom: 20px;
+        }
+        
+        .bio-sidebar-item {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            padding: 14px 0;
+            border-bottom: 1px solid rgba(0,0,0,0.07);
+        }
+        
+        .bio-sidebar-item:last-child {
+            border-bottom: none;
+        }
+        
+        .bio-sidebar-item-label {
+            font-size: 0.75rem;
+            font-weight: 600;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: #6b6b6b;
+        }
+        
+        .bio-sidebar-item-value {
+            font-size: 0.95rem;
+            font-weight: 500;
+            color: #1a1a1a;
+        }
+        
+        /* ── LOADING/ERROR ── */
+        .bio-loading,
+        .bio-error {
+            text-align: center;
+            padding: 80px 20px;
+            color: #888;
+        }
+        
+        .bio-error {
+            color: #c0392b;
+        }
+    </style>
+</head>
+<body>
+
+<div class="bio-nav">
+    <button class="back-btn" onclick="window.location.href='./index.html'">
+        ← Back to guides
+    </button>
+</div>
+
+<main id="bioMain">
+    
+    <div class="bio-loading" id="bioLoading">Loading guide...</div>
+    <div class="bio-error" id="bioError" style="display:none;">
+        Guide not found.
+    </div>
+    
+    <div class="bio-content" id="bioContent" style="display:none;">
+        <div class="bio-hero">
+            <img class="bio-photo" id="bioPhoto" src="" alt="" style="display:none;" />
+            <div class="bio-photo-placeholder" id="bioPhotoPlaceholder" style="display:none;">
+                <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="#999" stroke-width="1.5">
+                    <circle cx="12" cy="8" r="4"/>
+                    <path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/>
+                </svg>
+            </div>
+            <div class="bio-intro-block">
+                <div class="bio-verified-badge">✓ Verified Guide</div>
+                <h1 class="bio-name" id="bioName"></h1>
+                <p class="bio-short-intro" id="bioShortIntro"></p>
+                <div class="bio-meta" id="bioMeta"></div>
+                <a href="./tours.html" class="bio-cta-btn">View Tours</a>
+            </div>
+        </div>
+        
+        <div class="bio-content-area">
+            <div>
+                <p class="bio-section-label">About</p>
+                <h2 class="bio-section-title">My Story</h2>
+                <div class="bio-full-text" id="bioFullText"></div>
+            </div>
+            <div>
+                <div class="bio-sidebar" id="bioSidebar">
+                    <h3>Quick info</h3>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+</main>
+
+<script src="./assets/js/config.js"></script>
+<script>
+// bio.js — Dynamic guide bio page
+const PLACEHOLDER_IMG = './assets/images/author-avatar.png';
+
+// Extract slug from URL: ?slug=john-doe
+function getSlugFromURL() {
+    const params = new URLSearchParams(window.location.search);
+    return params.get('slug');
+}
+
+async function loadGuideBio() {
+    const slug = getSlugFromURL();
+    const loading = document.getElementById('bioLoading');
+    const error = document.getElementById('bioError');
+    const content = document.getElementById('bioContent');
+    
+    if (!slug) {
+        loading.style.display = 'none';
+        error.style.display = 'block';
+        return;
+    }
+    
+    try {
+        const res = await fetch(`${API_BASE}/api/guides/${slug}`);
+        const json = await res.json();
+        
+        loading.style.display = 'none';
+        
+        if (res.status === 404 || !json.success) {
+            error.style.display = 'block';
+            document.title = '404 – Guide Not Found';
+            return;
+        }
+        
+        const g = json.data;
+        document.title = `${g.full_name} – Guide Bio`;
+        
+        // Photo
+        const photo = document.getElementById('bioPhoto');
+        const placeholder = document.getElementById('bioPhotoPlaceholder');
+        if (g.photo_url) {
+            photo.src = g.photo_url;
+            photo.alt = g.full_name;
+            photo.style.display = 'block';
+        } else {
+            placeholder.style.display = 'flex';
+        }
+        
+        // Basic info
+        document.getElementById('bioName').textContent = g.full_name;
+        document.getElementById('bioShortIntro').textContent = g.short_intro || 'Local tour guide';
+        
+        // Bio text
+        const bioText = g.bio || 'No bio available yet.';
+        document.getElementById('bioFullText').innerHTML = bioText.split('\n\n').map(p => `<p>${p}</p>`).join('');
+        
+        // Meta row
+        const metaHTML = [];
+        if (g.experience_years) {
+            metaHTML.push(`
+                <div class="bio-meta-item">
+                    <span class="bio-meta-label">Experience</span>
+                    <span class="bio-meta-value">${g.experience_years} years</span>
+                </div>
+            `);
+        }
+        if (g.specializations && g.specializations.length > 0) {
+            metaHTML.push(`
+                <div class="bio-meta-item">
+                    <span class="bio-meta-label">Specialty</span>
+                    <span class="bio-meta-value">${g.specializations[0]}</span>
+                </div>
+            `);
+        }
+        if (g.location) {
+            metaHTML.push(`
+                <div class="bio-meta-item">
+                    <span class="bio-meta-label">Based in</span>
+                    <span class="bio-meta-value">${g.location}</span>
+                </div>
+            `);
+        }
+        document.getElementById('bioMeta').innerHTML = metaHTML.join('');
+        
+        // Sidebar
+        const sidebarHTML = ['<h3>Quick info</h3>'];
+        if (g.languages && g.languages.length > 0) {
+            sidebarHTML.push(`
+                <div class="bio-sidebar-item">
+                    <span class="bio-sidebar-item-label">Languages</span>
+                    <span class="bio-sidebar-item-value">${g.languages.join(', ')}</span>
+                </div>
+            `);
+        }
+        if (g.location) {
+            sidebarHTML.push(`
+                <div class="bio-sidebar-item">
+                    <span class="bio-sidebar-item-label">Location</span>
+                    <span class="bio-sidebar-item-value">${g.location}</span>
+                </div>
+            `);
+        }
+        if (g.specializations && g.specializations.length > 0) {
+            sidebarHTML.push(`
+                <div class="bio-sidebar-item">
+                    <span class="bio-sidebar-item-label">Specialties</span>
+                    <span class="bio-sidebar-item-value">${g.specializations.join(', ')}</span>
+                </div>
+            `);
+        }
+        if (g.experience_years) {
+            sidebarHTML.push(`
+                <div class="bio-sidebar-item">
+                    <span class="bio-sidebar-item-label">Years active</span>
+                    <span class="bio-sidebar-item-value">${g.experience_years} years</span>
+                </div>
+            `);
+        }
+        document.getElementById('bioSidebar').innerHTML = sidebarHTML.join('');
+        
+        content.style.display = 'block';
+        
+    } catch (err) {
+        loading.style.display = 'none';
+        error.style.display = 'block';
+        console.error('Bio load error:', err);
+    }
+}
+
+document.addEventListener('DOMContentLoaded', loadGuideBio);
+</script>
+
+</body>
+</html>

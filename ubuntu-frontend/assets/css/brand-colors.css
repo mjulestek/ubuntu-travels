@@ -1,0 +1,205 @@
+/* ═══════════════════════════════════════════════════════════════════════════
+   UBUNTU TRAVELS - BRAND COLORS
+   Signature colors applied globally across all pages
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* Override all color variables */
+:root {
+    /* Primary Brand Colors */
+    --primary: #E3702D !important;
+    --primary-dark: #c55a1e !important;
+    --primary-light: #f59e7a !important;
+    --primary-bg: #FFF0E6 !important;
+    --primary-border: #fdd8c0 !important;
+    
+    /* Background */
+    --background: #FFF7EB !important;
+    --baby-powder: #FFF7EB !important;
+    
+    /* Override green colors */
+    --viridian-green: #E3702D !important;
+    --viridian-green-light: #f59e7a !important;
+    --pistachio: #E3702D !important;
+    --pistachio_50: rgba(227, 112, 45, 0.5) !important;
+    --mikado-yellow: #E3702D !important;
+    
+    /* Surface colors */
+    --surface: #ffffff !important;
+    --surface-alt: #f9fafb !important;
+}
+
+/* Global background */
+body {
+    background: #FFF7EB !important;
+}
+
+/* All buttons with primary color */
+.btn-primary,
+.btn.btn-primary,
+button.btn-primary {
+    background: #E3702D !important;
+    border-color: #E3702D !important;
+    color: white !important;
+}
+
+.btn-primary:hover,
+.btn.btn-primary:hover,
+button.btn-primary:hover {
+    background: #c55a1e !important;
+    border-color: #c55a1e !important;
+}
+
+/* Links and accents */
+a:hover,
+.navbar-link:hover,
+.footer-link:hover {
+    color: #E3702D !important;
+}
+
+/* Active states */
+.active,
+.navbar-link.active,
+.topbar-link.active {
+    color: #E3702D !important;
+}
+
+/* Borders and outlines */
+input:focus,
+textarea:focus,
+select:focus,
+.form-input:focus,
+.form-select:focus,
+.form-textarea:focus {
+    border-color: #E3702D !important;
+    box-shadow: 0 0 0 3px rgba(227, 112, 45, 0.1) !important;
+}
+
+/* Chips and badges */
+.chip,
+.badge {
+    background: #FFF0E6 !important;
+    color: #E3702D !important;
+    border-color: #fdd8c0 !important;
+}
+
+/* Icons and SVG fills */
+.logo-icon,
+svg[fill]:not([fill="none"]) {
+    fill: #E3702D !important;
+}
+
+/* Hero sections */
+.hero,
+.hero-ubuntu {
+    background-color: #E3702D !important;
+}
+
+/* Cards hover effects */
+.card:hover,
+.tour-card:hover,
+.destination-card:hover,
+.popular-card:hover {
+    border-color: #E3702D !important;
+}
+
+/* Buttons with outline */
+.btn-outline,
+.hero-outline {
+    border-color: #1a1a1a !important;
+    color: #1a1a1a !important;
+}
+
+.btn-outline:hover {
+    background: rgba(227, 112, 45, 0.1) !important;
+    border-color: #E3702D !important;
+    color: #E3702D !important;
+}
+
+/* Hero outline button (on dark background) */
+.hero-outline {
+    border-color: white !important;
+    color: white !important;
+}
+
+.hero-outline:hover {
+    background: rgba(255, 255, 255, 0.1) !important;
+    border-color: white !important;
+    color: white !important;
+}
+
+/* Newsletter and forms */
+.newsletter-form button,
+.newsletter-form .btn {
+    background: #E3702D !important;
+    border-color: #E3702D !important;
+}
+
+/* Section backgrounds */
+.section {
+    background: #FFF7EB !important;
+}
+
+/* Remove any remaining green */
+*[style*="green"],
+*[class*="green"]:not(.logo):not(.logo-text) {
+    color: #E3702D !important;
+}
+
+/* Specific overrides for common elements */
+.go-top {
+    background: #E3702D !important;
+}
+
+.go-top:hover {
+    background: #c55a1e !important;
+}
+
+/* Price displays */
+.tour-card-price,
+.price,
+[class*="price"] {
+    color: #E3702D !important;
+}
+
+/* Stars and ratings */
+.rating,
+.stars,
+[class*="rating"] {
+    color: #E3702D !important;
+}
+
+/* Checkboxes and radio buttons */
+input[type="checkbox"]:checked,
+input[type="radio"]:checked {
+    accent-color: #E3702D !important;
+}
+
+/* Progress bars and loaders */
+.progress-bar,
+.loader,
+.spinner {
+    background: #E3702D !important;
+    border-color: #E3702D !important;
+}
+
+/* Tabs */
+.tab.active,
+.auth-tab.active {
+    color: #E3702D !important;
+}
+
+/* Alerts and notifications */
+.alert-success,
+.success {
+    background: #d1fae5 !important;
+    border-color: #10b981 !important;
+    color: #065f46 !important;
+}
+
+/* Keep success green but use orange for primary actions */
+.alert-info,
+.info {
+    background: #FFF0E6 !important;
+    border-color: #E3702D !important;
+    color: #7c2d12 !important;
+}

@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Profile — Ubuntu Travels</title>
+    
+    <link rel="shortcut icon" href="./favicon.svg" type="image/svg+xml">
+    <link rel="stylesheet" href="./assets/css/style.css">
+    <link rel="stylesheet" href="./assets/css/brand-colors.css">
+    
+    <style>
+        body { background: #FFF7EB; }
+        
+        .profile-container {
+            max-width: 900px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+        
+        .profile-card {
+            background: white;
+            border-radius: 16px;
+            padding: 40px;
+            box-shadow: 0 2px 20px rgba(0,0,0,0.08);
+        }
+        
+        .profile-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        
+        .profile-header h1 {
+            font-size: 2.4rem;
+            color: #1a1a1a;
+            margin-bottom: 10px;
+        }
+        
+        .profile-header p {
+            color: #666;
+            font-size: 1.1rem;
+        }
+        
+        .image-upload-section {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 30px;
+            background: #FFF7EB;
+            border-radius: 12px;
+        }
+        
+        .profile-image-preview {
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin: 0 auto 20px;
+            display: block;
+            border: 4px solid #E3702D;
+        }
+        
+        .profile-image-placeholder {
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #e8ddd0 0%, #d4c5b0 100%);
+            margin: 0 auto 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 4px solid #E3702D;
+        }
+        
+        .upload-btn-wrapper {
+            position: relative;
+            display: inline-block;
+        }
+        
+        .upload-btn {
+            background: #E3702D;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            border: none;
+            font-size: 1rem;
+        }
+        
+        .upload-btn:hover {
+            background: #c95c20;
+        }
+        
+        .upload-btn-wrapper input[type=file] {
+            position: absolute;
+            left: 0;
+            top: 0;
+            opacity: 0;
+            cursor: pointer;
+            width: 100%;
+            height: 100%;
+        }
+        
+        .form-section {
+            margin-bottom: 30px;
+            padding: 25px;
+            background: #f9f9f9;
+            border-radius: 12px;
+        }
+        
+        .form-section h3 {
+            font-size: 1.4rem;
+            color: #E3702D;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+        
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+        
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        
+        .form-group label {
+            font-weight: 600;
+            color: #333;
+            font-size: 0.95rem;
+        }
+        
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-family: inherit;
+            transition: border-color 0.2s;
+        }
+        
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #E3702D;
+        }
+        
+        .form-group textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+        
+        .checkbox-group {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 12px;
+            margin-top: 10px;
+        }
+        
+        .checkbox-label {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+        }
+        
+        .checkbox-label input {
+            width: auto;
+            cursor: pointer;
+        }
+        
+        .action-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 30px;
+        }
+        
+        .btn-save {
+            background: #E3702D;
+            color: white;
+            padding: 14px 40px;
+            border-radius: 8px;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            font-size: 1.1rem;
+        }
+        
+        .btn-save:hover {
+            background: #c95c20;
+        }
+        
+        .btn-cancel {
+            background: #f5f5f5;
+            color: #333;
+            padding: 14px 40px;
+            border-radius: 8px;
+            font-weight: 600;
+            border: 2px solid #e0e0e0;
+            cursor: pointer;
+            font-size: 1.1rem;
+        }
+        
+        .btn-cancel:hover {
+            background: #e8e8e8;
+        }
+        
+        .message {
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            text-align: center;
+            font-weight: 600;
+        }
+        
+        .message.success {
+            background: #E8F5E9;
+            color: #2E7D32;
+        }
+        
+        .message.error {
+            background: #FFEBEE;
+            color: #C62828;
+        }
+        
+        .char-count {
+            font-size: 0.85rem;
+            color: #666;
+            text-align: right;
+            margin-top: 4px;
+        }
+        
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.5);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+        }
+        
+        .loading-overlay.active {
+            display: flex;
+        }
+        
+        .loading-spinner {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+<header class="header" data-header>
+    <div class="container">
+        <a href="./index.html" style="text-decoration: none;">
+            <h1 class="logo">
+                <ion-icon name="paw-outline" class="logo-icon"></ion-icon>
+                <div class="logo-text">
+                    <span class="logo-main">Ubuntu Travels</span>
+                    <span class="logo-tagline">Explore East Africa</span>
+                </div>
+            </h1>
+        </a>
+        <nav class="navbar">
+            <a href="./guide-dashboard.html" class="btn btn-outline">← Back to Dashboard</a>
+        </nav>
+    </div>
+</header>
+
+<main class="profile-container">
+    <div class="profile-card">
+        <div class="profile-header">
+            <h1>Edit Your Profile</h1>
+            <p>Update your information to appear on the homepage</p>
+        </div>
+        
+        <div id="message"></div>
+        
+        <form id="profileForm">
+            <!-- Profile Image Upload -->
+            <div class="image-upload-section">
+                <h3 style="margin-bottom: 20px;">Profile Photo</h3>
+                <img id="profileImagePreview" class="profile-image-preview" style="display:none;" src="" alt="Profile">
+                <div id="profileImagePlaceholder" class="profile-image-placeholder">
+                    <svg width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="#999" stroke-width="1.5">
+                        <circle cx="12" cy="8" r="4"/>
+                        <path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/>
+                    </svg>
+                </div>
+                <div class="upload-btn-wrapper">
+                    <button type="button" class="upload-btn">Choose Photo</button>
+                    <input type="file" id="profileImageInput" accept="image/*">
+                </div>
+                <p style="margin-top: 10px; color: #666; font-size: 0.9rem;">Any image size or format - will be automatically resized</p>
+            </div>
+            
+            <!-- Personal Information -->
+            <div class="form-section">
+                <h3>Personal Information</h3>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>First Name *</label>
+                        <input type="text" name="firstName" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Last Name *</label>
+                        <input type="text" name="lastName" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Phone *</label>
+                        <input type="tel" name="phone" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Country *</label>
+                        <select name="country" required>
+                            <option value="">Select Country</option>
+                            <option value="Rwanda">Rwanda</option>
+                            <option value="Uganda">Uganda</option>
+                            <option value="Tanzania">Tanzania</option>
+                            <option value="Kenya">Kenya</option>
+                            <option value="Burundi">Burundi</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>City</label>
+                        <input type="text" name="city">
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Short Introduction -->
+            <div class="form-section">
+                <h3>Short Introduction</h3>
+                <div class="form-group">
+                    <label>One-line description (appears on homepage cards) *</label>
+                    <input type="text" name="shortIntro" maxlength="200" required placeholder="e.g., Expert in gorilla trekking and wildlife safaris">
+                    <div class="char-count"><span id="shortIntroCount">0</span>/200</div>
+                </div>
+            </div>
+            
+            <!-- Full Biography -->
+            <div class="form-section">
+                <h3>Full Biography</h3>
+                <div class="form-group">
+                    <label>Tell visitors about yourself, your experience, and what makes you special *</label>
+                    <textarea name="bio" maxlength="1000" required placeholder="Share your story, experience, and passion for guiding tours..."></textarea>
+                    <div class="char-count"><span id="bioCount">0</span>/1000</div>
+                </div>
+            </div>
+            
+            <!-- Professional Details -->
+            <div class="form-section">
+                <h3>Professional Details</h3>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>Company Name</label>
+                        <input type="text" name="companyName">
+                    </div>
+                    <div class="form-group">
+                        <label>Business Type</label>
+                        <select name="businessType">
+                            <option value="">Select Type</option>
+                            <option value="Tour Operator">Tour Operator</option>
+                            <option value="Individual Guide">Individual Guide</option>
+                            <option value="Travel Agency">Travel Agency</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Years of Experience *</label>
+                        <input type="number" name="yearsOfExperience" min="0" max="50" required>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Languages -->
+            <div class="form-section">
+                <h3>Languages Spoken</h3>
+                <div class="checkbox-group">
+                    <label class="checkbox-label">
+                        <input type="checkbox" name="languages" value="English">
+                        <span>English</span>
+                    </label>
+                    <label class="checkbox-label">
+                        <input type="checkbox" name="languages" value="French">
+                        <span>French</span>
+                    </label>
+                    <label class="checkbox-label">
+                        <input type="checkbox" name="languages" value="Swahili">
+                        <span>Swahili</span>
+                    </label>
+                    <label class="checkbox-label">
+                        <input type="checkbox" name="languages" value="Kinyarwanda">
+                        <span>Kinyarwanda</span>
+                    </label>
+                    <label class="checkbox-label">
+                        <input type="checkbox" name="languages" value="Spanish">
+                        <span>Spanish</span>
+                    </label>
+                    <label class="checkbox-label">
+                        <input type="checkbox" name="languages" value="German">
+                        <span>German</span>
+                    </label>
+                </div>
+            </div>
+            
+            <!-- Specializations -->
+            <div class="form-section">
+                <h3>Tour Specializations</h3>
+                <div class="checkbox-group">
+                    <label class="checkbox-label">
+                        <input type="checkbox" name="specializations" value="Wildlife">
+                        <span>Wildlife Safari</span>
+                    </label>
+                    <label class="checkbox-label">
+                        <input type="checkbox" name="specializations" value="Gorilla Trekking">
+                        <span>Gorilla Trekking</span>
+                    </label>
+                    <label class="checkbox-label">
+                        <input type="checkbox" name="specializations" value="Cultural Tours">
+                        <span>Cultural Tours</span>
+                    </label>
+                    <label class="checkbox-label">
+                        <input type="checkbox" name="specializations" value="Adventure">
+                        <span>Adventure</span>
+                    </label>
+                    <label class="checkbox-label">
+                        <input type="checkbox" name="specializations" value="Hiking">
+                        <span>Hiking</span>
+                    </label>
+                    <label class="checkbox-label">
+                        <input type="checkbox" name="specializations" value="City Tours">
+                        <span>City Tours</span>
+                    </label>
+                </div>
+            </div>
+            
+            <!-- Action Buttons -->
+            <div class="action-buttons">
+                <button type="submit" class="btn-save">Save Profile</button>
+                <button type="button" class="btn-cancel" onclick="window.location.href='./guide-dashboard.html'">Cancel</button>
+            </div>
+        </form>
+    </div>
+</main>
+
+<div class="loading-overlay" id="loadingOverlay">
+    <div class="loading-spinner">
+        <p style="font-size: 1.2rem; margin-bottom: 10px;">Uploading image...</p>
+        <p style="color: #666;">Please wait</p>
+    </div>
+</div>
+
+<script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+<script src="./assets/js/config.js"></script>
+<script src="./assets/js/guide-profile.js"></script>
+
+</body>
+</html>

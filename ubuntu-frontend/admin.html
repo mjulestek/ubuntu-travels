@@ -1,0 +1,1017 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin Dashboard — Ubuntu Travels</title>
+    
+    <link rel="shortcut icon" href="./favicon.svg" type="image/svg+xml">
+    <link rel="stylesheet" href="./assets/css/style.css">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Abril+Fatface&family=Comforter+Brush&family=Heebo:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        .admin-tabs {
+            display: flex;
+            gap: 0;
+            border-bottom: 2px solid var(--light-gray);
+            margin-bottom: 30px;
+            overflow-x: auto;
+        }
+        
+        .admin-tab {
+            padding: 15px 25px;
+            background: transparent;
+            color: var(--black-coral);
+            border: none;
+            border-bottom: 3px solid transparent;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 1.5rem;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+        }
+        
+        .admin-tab:hover {
+            color: var(--viridian-green);
+            background: var(--white-2);
+        }
+        
+        .admin-tab.active {
+            color: var(--viridian-green);
+            border-bottom-color: var(--viridian-green);
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .stat-card {
+            background: var(--white-2);
+            padding: 20px;
+            border-radius: var(--radius-6);
+            border-left: 4px solid var(--viridian-green);
+        }
+        
+        .stat-number {
+            font-size: 3rem;
+            font-weight: 700;
+            color: var(--viridian-green);
+        }
+        
+        .stat-label {
+            color: var(--black-coral);
+            font-size: 1.4rem;
+            margin-top: 5px;
+        }
+    </style>
+    <link rel="stylesheet" href="./assets/css/brand-colors.css">
+</head>
+<body>
+
+<header class="header" data-header style="background: var(--viridian-green); padding: 0; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+    <div class="container" style="display: flex; justify-content: space-between; align-items: center; max-width: 100%; padding: 18px 40px;">
+        <a href="./index.html" style="text-decoration: none;">
+            <h1 class="logo" style="margin: 0; font-size: 2.2rem; color: white; font-weight: 600; letter-spacing: 0.5px;">Ubuntu Travels Admin</h1>
+        </a>
+
+        <nav style="display: flex; gap: 12px; align-items: center;">
+            <button class="btn" id="logoutBtn" type="button" style="background: white; color: var(--viridian-green); border: 2px solid white; padding: 10px 24px; border-radius: 6px; font-weight: 600; cursor: pointer; transition: all 0.3s ease; white-space: nowrap;">
+                Logout
+            </button>
+        </nav>
+    </div>
+</header>
+
+<main>
+    <section class="section" style="padding-top: 120px; padding-bottom: 60px;">
+        <div class="container">
+
+            <p class="section-subtitle">Admin Dashboard</p>
+            <h2 class="h2 section-title" style="margin-bottom: 40px;">Manage Your Platform</h2>
+
+            <!-- Stats Overview -->
+            <div class="stats-grid" id="statsGrid">
+                <div class="stat-card">
+                    <div class="stat-number" id="statTours">-</div>
+                    <div class="stat-label">Total Tours</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="statGuides">-</div>
+                    <div class="stat-label">Tour Guides</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="statBookings">-</div>
+                    <div class="stat-label">Total Bookings</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="statPending">-</div>
+                    <div class="stat-label">Pending Approval</div>
+                </div>
+            </div>
+
+            <!-- Tabs Navigation -->
+            <div class="admin-tabs">
+                <button class="admin-tab active" data-tab="guides">Tour Guides</button>
+                <button class="admin-tab" data-tab="tours">Approve Tours</button>
+                <button class="admin-tab" data-tab="bookings">Bookings</button>
+                <button class="admin-tab" data-tab="all-tours">All Tours</button>
+                <button class="admin-tab" data-tab="create-admin">Create Admin</button>
+            </div>
+
+            <!-- Tab: Tour Guides -->
+            <div class="tab-content active" id="tab-guides">
+                <div class="popular-card" style="padding: 30px;">
+                    <h2 class="h2 section-title">Tour Guides Management</h2>
+                    <p style="color: var(--black-coral); margin-top: 12px; margin-bottom: 20px;">
+                        Manage tour guides, approve applications, ban accounts, and monitor their activity.
+                    </p>
+
+                    <!-- Filters -->
+                    <div style="display: flex; gap: 12px; flex-wrap: wrap; align-items: center; margin-bottom: 20px;">
+                        <input id="guideSearch" class="newsletter-input" placeholder="Search by name or email..." style="flex: 1; min-width: 250px;">
+                        <select id="guideStatusFilter" class="newsletter-input" style="max-width: 180px;">
+                            <option value="">All Guides</option>
+                            <option value="approved">Approved</option>
+                            <option value="pending">Pending Approval</option>
+                            <option value="banned">Banned</option>
+                        </select>
+                        <button class="btn btn-primary" id="searchGuidesBtn">Search</button>
+                        <button class="btn btn-outline" id="refreshGuidesBtn">Refresh</button>
+                    </div>
+
+                    <p id="guideMsg" style="margin-bottom: 15px; font-weight: 600; color: var(--viridian-green);"></p>
+
+                    <!-- Guides Grid -->
+                    <div id="adminGuides" style="display: grid; gap: 15px;">Loading guides...</div>
+                    
+                    <!-- Selected Guide Details -->
+                    <div id="guideDetailsSection" style="display: none; margin-top: 30px; padding-top: 30px; border-top: 2px solid var(--light-gray);">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                            <h3 class="h3">Guide Details</h3>
+                            <button class="btn btn-outline" id="closeGuideDetails">Close</button>
+                        </div>
+                        
+                        <!-- Guide Info Card -->
+                        <div id="guideInfoCard" style="background: var(--white-2); padding: 20px; border-radius: 6px; margin-bottom: 20px;">
+                            <!-- Will be populated dynamically -->
+                        </div>
+
+                        <!-- Guide's Tours -->
+                        <h3 class="h3" style="margin-bottom: 15px;">Tours by This Guide</h3>
+                        <div id="guideTours" style="display: grid; gap: 15px;">
+                            Loading tours...
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab: Approve Tours -->
+            <div class="tab-content" id="tab-tours">
+                <div class="popular-card" style="padding: 30px;">
+                    <h2 class="h2 section-title">Tour Approval</h2>
+                    <p style="color: var(--black-coral); margin-top: 12px; margin-bottom: 20px;">
+                        Review and approve tours submitted by guides.
+                    </p>
+                    
+                    <div style="display: flex; gap: 12px; flex-wrap: wrap; align-items: center; margin-bottom: 20px;">
+                        <select id="tourStatusFilter" class="newsletter-input" style="max-width: 200px;">
+                            <option value="pending_approval">Pending Approval</option>
+                            <option value="approved">Approved</option>
+                            <option value="rejected">Rejected</option>
+                            <option value="draft">Draft</option>
+                            <option value="">All Statuses</option>
+                        </select>
+                        <button class="btn btn-primary" id="loadToursBtn">Load Tours</button>
+                    </div>
+
+                    <p id="tourMsg" style="margin-bottom: 15px; font-weight: 600; color: var(--viridian-green);"></p>
+                    <div id="tourGrid" style="display: grid; gap: 20px;"></div>
+                </div>
+            </div>
+
+            <!-- Tab: Bookings -->
+            <div class="tab-content" id="tab-bookings">
+                <div class="popular-card" style="padding: 30px;">
+                    <h2 class="h2 section-title">Bookings Management</h2>
+                    <p style="color: var(--black-coral); margin-top: 12px; margin-bottom: 20px;">
+                        View and manage all bookings across the platform.
+                    </p>
+
+                    <div style="display: flex; gap: 12px; flex-wrap: wrap; align-items: center; margin-bottom: 20px;">
+                        <input id="bookingSearch" class="newsletter-input" placeholder="Search name, email, phone, or tour..." style="flex: 1; min-width: 280px;">
+                        <select id="bookingStatus" class="newsletter-input" style="max-width: 200px;">
+                            <option value="">All Statuses</option>
+                            <option value="pending">Pending</option>
+                            <option value="confirmed">Confirmed</option>
+                            <option value="cancelled">Cancelled</option>
+                        </select>
+                        <button class="btn btn-primary" id="loadBookingsBtn">Search</button>
+                    </div>
+
+                    <p id="bookingMsg" style="margin-bottom: 15px; font-weight: 600; color: var(--viridian-green);"></p>
+
+                    <div style="overflow-x: auto;">
+                        <table style="width: 100%; border-collapse: collapse; font-size: 1.4rem;">
+                            <thead>
+                            <tr style="text-align: left; border-bottom: 2px solid var(--light-gray); background: var(--white-2);">
+                                <th style="padding: 15px 10px; font-weight: 600;">Client</th>
+                                <th style="padding: 15px 10px; font-weight: 600;">Tour</th>
+                                <th style="padding: 15px 10px; font-weight: 600;">Date</th>
+                                <th style="padding: 15px 10px; font-weight: 600;">Guests</th>
+                                <th style="padding: 15px 10px; font-weight: 600;">Status</th>
+                                <th style="padding: 15px 10px; font-weight: 600;">Actions</th>
+                            </tr>
+                            </thead>
+                            <tbody id="bookingRows"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab: All Tours -->
+            <div class="tab-content" id="tab-all-tours">
+                <div class="popular-card" style="padding: 30px;">
+                    <h2 class="h2 section-title">All Tours</h2>
+                    <p style="color: var(--black-coral); margin-top: 12px; margin-bottom: 20px;">
+                        View and manage all tours across the platform.
+                    </p>
+                    <div id="adminTours" style="display: grid; gap: 15px;">Loading all tours...</div>
+                </div>
+            </div>
+
+            <!-- Tab: Create Admin -->
+            <div class="tab-content" id="tab-create-admin">
+                <div class="popular-card" style="padding: 30px; max-width: 600px; margin: 0 auto;">
+                    <h2 class="h2 section-title">Create Admin Account</h2>
+                    <p style="color: var(--black-coral); margin-top: 12px; margin-bottom: 30px;">
+                        Create a new administrator account. Only existing admins can create new admin accounts.
+                    </p>
+
+                    <form id="createAdminForm" style="display: grid; gap: 20px;">
+                        <div style="display: grid; gap: 10px;">
+                            <label style="font-weight: 600; color: var(--black-coral);">First Name *</label>
+                            <input type="text" name="firstName" class="newsletter-input" required placeholder="Enter first name">
+                        </div>
+
+                        <div style="display: grid; gap: 10px;">
+                            <label style="font-weight: 600; color: var(--black-coral);">Last Name *</label>
+                            <input type="text" name="lastName" class="newsletter-input" required placeholder="Enter last name">
+                        </div>
+
+                        <div style="display: grid; gap: 10px;">
+                            <label style="font-weight: 600; color: var(--black-coral);">Email *</label>
+                            <input type="email" name="email" class="newsletter-input" required placeholder="admin@example.com">
+                        </div>
+
+                        <div style="display: grid; gap: 10px;">
+                            <label style="font-weight: 600; color: var(--black-coral);">Password *</label>
+                            <input type="password" name="password" class="newsletter-input" required placeholder="Minimum 8 characters" minlength="8">
+                            <small style="color: var(--battleship-gray);">Password must be at least 8 characters long</small>
+                        </div>
+
+                        <div style="display: grid; gap: 10px;">
+                            <label style="font-weight: 600; color: var(--black-coral);">Phone *</label>
+                            <input type="tel" name="phone" class="newsletter-input" required placeholder="+1234567890">
+                        </div>
+
+                        <div style="display: grid; gap: 10px;">
+                            <label style="font-weight: 600; color: var(--black-coral);">Country *</label>
+                            <select name="country" class="newsletter-input" required>
+                                <option value="">Select Country</option>
+                                <option value="Kenya">Kenya</option>
+                                <option value="Uganda">Uganda</option>
+                                <option value="Tanzania">Tanzania</option>
+                                <option value="Rwanda">Rwanda</option>
+                                <option value="Burundi">Burundi</option>
+                                <option value="South Sudan">South Sudan</option>
+                            </select>
+                        </div>
+
+                        <p id="createAdminMsg" style="margin: 0; font-weight: 600; text-align: center;"></p>
+
+                        <button type="submit" class="btn btn-primary" style="width: 100%;">
+                            <ion-icon name="person-add-outline" style="vertical-align: middle;"></ion-icon>
+                            Create Admin Account
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+        </div>
+    </section>
+</main>
+
+<script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+<script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+
+<script src="./assets/js/admin-auth.js"></script>
+<script src="./assets/js/admin-dashboard.js"></script>
+
+<script>
+// Logout button handler - MUST BE FIRST
+document.addEventListener('DOMContentLoaded', function() {
+    const logoutBtn = document.getElementById('logoutBtn');
+    if (logoutBtn) {
+        logoutBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            console.log('Logout clicked');
+            // Clear all tokens
+            localStorage.removeItem('ADMIN_JWT');
+            localStorage.removeItem('AUTH_TOKEN');
+            localStorage.removeItem('SAVED_EMAIL');
+            localStorage.removeItem('REMEMBER_ME');
+            // Redirect to auth page
+            window.location.href = './auth.html';
+        });
+    }
+});
+
+// Tab switching
+document.querySelectorAll('.admin-tab').forEach(tab => {
+    tab.addEventListener('click', () => {
+        const targetTab = tab.getAttribute('data-tab');
+        
+        // Update active tab
+        document.querySelectorAll('.admin-tab').forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+        
+        // Update active content
+        document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+        document.getElementById(`tab-${targetTab}`).classList.add('active');
+        
+        // Load content for the tab if needed
+        if (targetTab === 'tours') {
+            loadApproveTours();
+        } else if (targetTab === 'bookings') {
+            loadBookings();
+        }
+    });
+});
+
+// Load stats on page load
+async function loadStats() {
+    try {
+        const headers = authHeaders();
+        
+        // Fetch guides
+        const guidesRes = await fetch(`${API_BASE}/api/admin/guides`, { headers });
+        const guidesData = await guidesRes.json();
+        document.getElementById('statGuides').textContent = guidesData.ok ? guidesData.guides.length : '0';
+        
+        // Fetch all tours
+        const toursRes = await fetch(`${API_BASE}/api/admin/tours`, { headers });
+        const toursData = await toursRes.json();
+        document.getElementById('statTours').textContent = toursData.ok ? toursData.tours.length : '0';
+        
+        // Count pending tours
+        const pending = toursData.ok ? toursData.tours.filter(t => t.status === 'pending_approval').length : 0;
+        document.getElementById('statPending').textContent = pending;
+        
+        // Fetch bookings
+        const bookingsRes = await fetch(`${API_BASE}/api/bookings/admin`, { headers });
+        const bookingsData = await bookingsRes.json();
+        document.getElementById('statBookings').textContent = bookingsData.ok ? bookingsData.bookings.length : '0';
+    } catch (err) {
+        console.error('Failed to load stats:', err);
+    }
+}
+
+// Load and display guides
+let allGuides = [];
+
+async function loadGuides() {
+    const msg = document.getElementById('guideMsg');
+    const container = document.getElementById('adminGuides');
+    
+    msg.textContent = 'Loading guides...';
+    container.innerHTML = '';
+    
+    try {
+        const headers = authHeaders();
+        const res = await fetch(`${API_BASE}/api/admin/guides`, { headers });
+        const data = await res.json();
+        
+        if (!data.ok) throw new Error(data.message || 'Failed to load guides');
+        
+        allGuides = data.guides;
+        displayGuides(allGuides);
+        msg.textContent = `Loaded ${allGuides.length} guides`;
+    } catch (err) {
+        msg.textContent = `Error: ${err.message}`;
+        console.error('Failed to load guides:', err);
+    }
+}
+
+function displayGuides(guides) {
+    const container = document.getElementById('adminGuides');
+    container.innerHTML = '';
+    
+    if (guides.length === 0) {
+        container.innerHTML = '<p style="color: var(--black-coral);">No guides found.</p>';
+        return;
+    }
+    
+    guides.forEach(guide => {
+        const card = document.createElement('div');
+        card.className = 'popular-card';
+        card.style.padding = '20px';
+        card.style.background = guide.isBanned ? '#fff5f5' : 'white';
+        
+        const statusBadge = guide.isBanned 
+            ? '<span style="background: #ff4444; color: white; padding: 4px 12px; border-radius: 4px; font-size: 1.2rem; font-weight: 600;">BANNED</span>'
+            : guide.isApproved 
+            ? '<span style="background: #00c853; color: white; padding: 4px 12px; border-radius: 4px; font-size: 1.2rem; font-weight: 600;">APPROVED</span>'
+            : '<span style="background: #ff9800; color: white; padding: 4px 12px; border-radius: 4px; font-size: 1.2rem; font-weight: 600;">PENDING</span>';
+        
+        card.innerHTML = `
+            <div style="display: flex; justify-content: space-between; align-items: start; gap: 15px; flex-wrap: wrap;">
+                <div style="flex: 1; min-width: 250px;">
+                    <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 8px;">
+                        <h3 class="h3" style="margin: 0;">${guide.fullName || 'No Name'}</h3>
+                        ${statusBadge}
+                    </div>
+                    <p style="color: var(--black-coral); margin-top: 5px;">
+                        <strong>Email:</strong> ${guide.email}
+                    </p>
+                    ${guide.phone ? `<p style="color: var(--black-coral); margin-top: 3px;"><strong>Phone:</strong> ${guide.phone}</p>` : ''}
+                    ${guide.bio ? `<p style="color: var(--black-coral); margin-top: 8px; font-style: italic;">"${guide.bio}"</p>` : ''}
+                    <p style="color: var(--battleship-gray); margin-top: 8px; font-size: 1.3rem;">
+                        Joined: ${new Date(guide.createdAt).toLocaleDateString()}
+                    </p>
+                </div>
+                
+                <div style="display: flex; flex-direction: column; gap: 8px; min-width: 200px;">
+                    ${!guide.isApproved && !guide.isBanned ? `
+                        <button class="btn btn-primary" onclick="approveGuide('${guide._id}')" style="width: 100%;">
+                            ✓ Approve Guide
+                        </button>
+                    ` : ''}
+                    ${guide.isApproved && !guide.isBanned ? `
+                        <button class="btn btn-outline" onclick="unapproveGuide('${guide._id}')" style="width: 100%;">
+                            ✗ Unapprove
+                        </button>
+                    ` : ''}
+                    ${guide.isApproved && !guide.verified && !guide.isBanned ? `
+                        <button class="btn btn-primary" onclick="verifyGuide('${guide._id}')" style="width: 100%; background: #4CAF50;">
+                            ✓ Mark as Verified
+                        </button>
+                    ` : ''}
+                    ${guide.verified && !guide.isBanned ? `
+                        <button class="btn btn-outline" onclick="unverifyGuide('${guide._id}')" style="width: 100%;">
+                            ✗ Remove Verified Badge
+                        </button>
+                    ` : ''}
+                    ${!guide.isBanned ? `
+                        <button class="btn btn-outline" onclick="banGuide('${guide._id}')" style="width: 100%; background: #fff3cd; border-color: #ff9800;">
+                            🚫 Ban Guide
+                        </button>
+                    ` : `
+                        <button class="btn btn-primary" onclick="unbanGuide('${guide._id}')" style="width: 100%;">
+                            ✓ Unban Guide
+                        </button>
+                    `}
+                    <button class="btn btn-secondary" onclick="viewGuideDetails('${guide._id}')" style="width: 100%;">
+                        👁 View Details & Tours
+                    </button>
+                    <button class="btn btn-outline" onclick="deleteGuide('${guide._id}', '${guide.fullName}')" style="width: 100%; background: #ffebee; border-color: #f44336; color: #f44336;">
+                        🗑 Delete Guide
+                    </button>
+                </div>
+            </div>
+        `;
+        
+        container.appendChild(card);
+    });
+}
+
+// Filter guides
+function filterGuides() {
+    const search = document.getElementById('guideSearch').value.toLowerCase();
+    const status = document.getElementById('guideStatusFilter').value;
+    
+    let filtered = allGuides;
+    
+    // Filter by search
+    if (search) {
+        filtered = filtered.filter(g => 
+            g.fullName.toLowerCase().includes(search) || 
+            g.email.toLowerCase().includes(search)
+        );
+    }
+    
+    // Filter by status
+    if (status === 'approved') {
+        filtered = filtered.filter(g => g.isApproved && !g.isBanned);
+    } else if (status === 'pending') {
+        filtered = filtered.filter(g => !g.isApproved && !g.isBanned);
+    } else if (status === 'banned') {
+        filtered = filtered.filter(g => g.isBanned);
+    }
+    
+    displayGuides(filtered);
+    document.getElementById('guideMsg').textContent = `Showing ${filtered.length} of ${allGuides.length} guides`;
+}
+
+// Guide actions
+async function approveGuide(id) {
+    try {
+        const res = await fetch(`${API_BASE}/api/admin/guides/${id}`, {
+            method: 'PATCH',
+            headers: authHeaders(),
+            body: JSON.stringify({ isApproved: true })
+        });
+        const data = await res.json();
+        if (!data.ok) throw new Error(data.message);
+        alert('Guide approved successfully!');
+        await loadGuides();
+        await loadStats();
+    } catch (err) {
+        alert(`Error: ${err.message}`);
+    }
+}
+
+async function unapproveGuide(id) {
+    if (!confirm('Remove approval from this guide? They will need to be re-approved.')) return;
+    try {
+        const res = await fetch(`${API_BASE}/api/admin/guides/${id}`, {
+            method: 'PATCH',
+            headers: authHeaders(),
+            body: JSON.stringify({ isApproved: false })
+        });
+        const data = await res.json();
+        if (!data.ok) throw new Error(data.message);
+        alert('Guide unapproved');
+        await loadGuides();
+    } catch (err) {
+        alert(`Error: ${err.message}`);
+    }
+}
+
+async function banGuide(id) {
+    if (!confirm('Ban this guide? They will not be able to create tours or access their account.')) return;
+    try {
+        const res = await fetch(`${API_BASE}/api/admin/guides/${id}`, {
+            method: 'PATCH',
+            headers: authHeaders(),
+            body: JSON.stringify({ isBanned: true })
+        });
+        const data = await res.json();
+        if (!data.ok) throw new Error(data.message);
+        alert('Guide banned');
+        await loadGuides();
+    } catch (err) {
+        alert(`Error: ${err.message}`);
+    }
+}
+
+async function unbanGuide(id) {
+    try {
+        const res = await fetch(`${API_BASE}/api/admin/guides/${id}`, {
+            method: 'PATCH',
+            headers: authHeaders(),
+            body: JSON.stringify({ isBanned: false })
+        });
+        const data = await res.json();
+        if (!data.ok) throw new Error(data.message);
+        alert('Guide unbanned successfully!');
+        await loadGuides();
+    } catch (err) {
+        alert(`Error: ${err.message}`);
+    }
+}
+
+async function verifyGuide(id) {
+    try {
+        const res = await fetch(`${API_BASE}/api/admin/guides/${id}`, {
+            method: 'PATCH',
+            headers: authHeaders(),
+            body: JSON.stringify({ verified: true })
+        });
+        const data = await res.json();
+        if (!data.ok) throw new Error(data.message);
+        alert('✅ Guide marked as verified! They will now appear on the homepage.');
+        await loadGuides();
+        await loadStats();
+    } catch (err) {
+        alert(`Error: ${err.message}`);
+    }
+}
+
+async function unverifyGuide(id) {
+    if (!confirm('Remove verified badge? This guide will no longer appear on the homepage.')) return;
+    try {
+        const res = await fetch(`${API_BASE}/api/admin/guides/${id}`, {
+            method: 'PATCH',
+            headers: authHeaders(),
+            body: JSON.stringify({ verified: false })
+        });
+        const data = await res.json();
+        if (!data.ok) throw new Error(data.message);
+        alert('Verified badge removed');
+        await loadGuides();
+    } catch (err) {
+        alert(`Error: ${err.message}`);
+    }
+}
+
+async function deleteGuide(id, name) {
+    if (!confirm(`Delete guide "${name}" and ALL their tours permanently? This cannot be undone!`)) return;
+    try {
+        const res = await fetch(`${API_BASE}/api/admin/guides/${id}`, {
+            method: 'DELETE',
+            headers: authHeaders()
+        });
+        const data = await res.json();
+        if (!data.ok) throw new Error(data.message);
+        alert('Guide and their tours deleted successfully');
+        await loadGuides();
+        await loadStats();
+        document.getElementById('guideDetailsSection').style.display = 'none';
+    } catch (err) {
+        alert(`Error: ${err.message}`);
+    }
+}
+
+// View guide details and tours
+async function viewGuideDetails(guideId) {
+    const guide = allGuides.find(g => g._id === guideId);
+    if (!guide) return;
+    
+    const section = document.getElementById('guideDetailsSection');
+    const infoCard = document.getElementById('guideInfoCard');
+    const toursContainer = document.getElementById('guideTours');
+    
+    // Show section
+    section.style.display = 'block';
+    section.scrollIntoView({ behavior: 'smooth' });
+    
+    // Display guide info
+    const statusBadge = guide.isBanned 
+        ? '<span style="background: #ff4444; color: white; padding: 6px 15px; border-radius: 4px; font-weight: 600;">BANNED</span>'
+        : guide.isApproved 
+        ? '<span style="background: #00c853; color: white; padding: 6px 15px; border-radius: 4px; font-weight: 600;">APPROVED</span>'
+        : '<span style="background: #ff9800; color: white; padding: 6px 15px; border-radius: 4px; font-weight: 600;">PENDING APPROVAL</span>';
+    
+    infoCard.innerHTML = `
+        <div style="display: grid; gap: 15px;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <h3 class="h3" style="margin: 0;">${guide.fullName}</h3>
+                ${statusBadge}
+            </div>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 15px;">
+                <div>
+                    <strong>Email:</strong><br>
+                    <a href="mailto:${guide.email}" style="color: var(--viridian-green);">${guide.email}</a>
+                </div>
+                ${guide.phone ? `
+                    <div>
+                        <strong>Phone:</strong><br>
+                        <a href="tel:${guide.phone}" style="color: var(--viridian-green);">${guide.phone}</a>
+                    </div>
+                ` : ''}
+                <div>
+                    <strong>Member Since:</strong><br>
+                    ${new Date(guide.createdAt).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
+                </div>
+                <div>
+                    <strong>Last Updated:</strong><br>
+                    ${new Date(guide.updatedAt).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
+                </div>
+            </div>
+            ${guide.bio ? `
+                <div>
+                    <strong>Bio:</strong><br>
+                    <p style="color: var(--black-coral); margin-top: 5px; font-style: italic;">${guide.bio}</p>
+                </div>
+            ` : ''}
+        </div>
+    `;
+    
+    // Load guide's tours
+    toursContainer.innerHTML = 'Loading tours...';
+    
+    try {
+        const res = await fetch(`${API_BASE}/api/admin/guides/${guideId}/tours`, {
+            headers: authHeaders()
+        });
+        const data = await res.json();
+        
+        if (!data.ok) throw new Error(data.message);
+        
+        if (data.tours.length === 0) {
+            toursContainer.innerHTML = '<p style="color: var(--black-coral);">This guide has not created any tours yet.</p>';
+            return;
+        }
+        
+        toursContainer.innerHTML = '';
+        data.tours.forEach(tour => {
+            const tourCard = document.createElement('div');
+            tourCard.className = 'popular-card';
+            tourCard.style.padding = '15px';
+            
+            const statusColor = tour.status === 'approved' ? 'green' : tour.status === 'rejected' ? 'red' : 'orange';
+            
+            tourCard.innerHTML = `
+                <div style="display: flex; gap: 15px; flex-wrap: wrap;">
+                    <img src="${tour.imageUrl}" alt="${tour.title}" 
+                         style="width: 150px; height: 100px; object-fit: cover; border-radius: 6px;">
+                    <div style="flex: 1; min-width: 200px;">
+                        <h4 style="margin: 0; font-size: 1.6rem;">${tour.title}</h4>
+                        <p style="color: var(--black-coral); margin-top: 5px; font-size: 1.3rem;">
+                            ${tour.location} • ${tour.durationDays} days • $${tour.price}
+                        </p>
+                        <p style="margin-top: 5px;">
+                            <strong>Status:</strong> 
+                            <span style="color: ${statusColor}; font-weight: 600;">${tour.status.toUpperCase()}</span>
+                        </p>
+                    </div>
+                    <div style="display: flex; gap: 8px; flex-wrap: wrap; align-items: center;">
+                        <a class="btn btn-outline" href="./tour.html?slug=${tour.slug}" target="_blank" style="padding: 8px 15px; font-size: 1.3rem;">View</a>
+                        ${tour.status !== 'approved' ? `
+                            <button class="btn btn-primary" onclick="approveTour('${tour._id}')" style="padding: 8px 15px; font-size: 1.3rem;">Approve</button>
+                        ` : ''}
+                        <button class="btn btn-outline" onclick="deleteTourFromGuide('${tour._id}', '${guideId}')" style="padding: 8px 15px; font-size: 1.3rem;">Delete</button>
+                    </div>
+                </div>
+            `;
+            
+            toursContainer.appendChild(tourCard);
+        });
+    } catch (err) {
+        toursContainer.innerHTML = `<p style="color: red;">Error loading tours: ${err.message}</p>`;
+    }
+}
+
+async function deleteTourFromGuide(tourId, guideId) {
+    if (!confirm('Delete this tour?')) return;
+    try {
+        const res = await fetch(`${API_BASE}/api/admin/tours/${tourId}`, {
+            method: 'DELETE',
+            headers: authHeaders()
+        });
+        const data = await res.json();
+        if (!data.ok) throw new Error(data.message);
+        alert('Tour deleted');
+        await viewGuideDetails(guideId); // Refresh the guide details
+        await loadStats();
+    } catch (err) {
+        alert(`Error: ${err.message}`);
+    }
+}
+
+// Load approve tours tab
+async function loadApproveTours() {
+    const msg = document.getElementById('tourMsg');
+    const grid = document.getElementById('tourGrid');
+    const statusFilter = document.getElementById('tourStatusFilter').value;
+    
+    msg.textContent = 'Loading tours...';
+    grid.innerHTML = '';
+    
+    try {
+        const headers = authHeaders();
+        const url = statusFilter 
+            ? `${API_BASE}/api/admin/tours?status=${statusFilter}`
+            : `${API_BASE}/api/admin/tours`;
+            
+        const res = await fetch(url, { headers });
+        const data = await res.json();
+        
+        if (!data.ok) throw new Error(data.message || 'Failed to load tours');
+        
+        msg.textContent = `Loaded ${data.tours.length} tours`;
+        
+        data.tours.forEach(tour => {
+            const card = document.createElement('div');
+            card.className = 'popular-card';
+            card.style.padding = '20px';
+            card.innerHTML = `
+                <div style="display: flex; gap: 15px; flex-wrap: wrap;">
+                    <img src="${tour.imageUrl}" alt="${tour.title}" 
+                         style="width: 200px; height: 150px; object-fit: cover; border-radius: 6px;">
+                    <div style="flex: 1; min-width: 250px;">
+                        <h3 class="h3">${tour.title}</h3>
+                        <p style="color: var(--black-coral); margin-top: 8px;">
+                            ${tour.location} • ${tour.durationDays} days • $${tour.price}
+                        </p>
+                        <p style="margin-top: 8px;">
+                            <strong>Status:</strong> 
+                            <span style="color: ${tour.status === 'approved' ? 'green' : tour.status === 'rejected' ? 'red' : 'orange'};">
+                                ${tour.status.toUpperCase()}
+                            </span>
+                        </p>
+                        <div style="display: flex; gap: 10px; flex-wrap: wrap; margin-top: 15px;">
+                            <button class="btn btn-primary" onclick="approveTour('${tour._id}')">Approve</button>
+                            <button class="btn btn-outline" onclick="rejectTour('${tour._id}')">Reject</button>
+                            <button class="btn btn-outline" onclick="deleteTour('${tour._id}')">Delete</button>
+                            <a class="btn btn-outline" href="./tour.html?slug=${tour.slug}" target="_blank">Preview</a>
+                        </div>
+                    </div>
+                </div>
+            `;
+            grid.appendChild(card);
+        });
+    } catch (err) {
+        msg.textContent = `Error: ${err.message}`;
+    }
+}
+
+// Load bookings tab
+async function loadBookings() {
+    const msg = document.getElementById('bookingMsg');
+    const rows = document.getElementById('bookingRows');
+    const search = document.getElementById('bookingSearch').value;
+    const status = document.getElementById('bookingStatus').value;
+    
+    msg.textContent = 'Loading bookings...';
+    rows.innerHTML = '';
+    
+    try {
+        const headers = authHeaders();
+        const res = await fetch(`${API_BASE}/api/bookings/admin`, { headers });
+        const data = await res.json();
+        
+        if (!data.ok) throw new Error(data.message || 'Failed to load bookings');
+        
+        let bookings = data.bookings;
+        
+        // Filter by search
+        if (search) {
+            const searchLower = search.toLowerCase();
+            bookings = bookings.filter(b => 
+                b.fullName.toLowerCase().includes(searchLower) ||
+                b.email.toLowerCase().includes(searchLower) ||
+                b.phone.includes(search)
+            );
+        }
+        
+        // Filter by status
+        if (status) {
+            bookings = bookings.filter(b => b.status === status);
+        }
+        
+        msg.textContent = `Showing ${bookings.length} of ${data.bookings.length} bookings`;
+        
+        if (bookings.length === 0) {
+            rows.innerHTML = '<tr><td colspan="6" style="padding: 20px; text-align: center; color: var(--black-coral);">No bookings found</td></tr>';
+            return;
+        }
+        
+        bookings.forEach(booking => {
+            const row = document.createElement('tr');
+            row.style.borderBottom = '1px solid var(--light-gray)';
+            row.innerHTML = `
+                <td style="padding: 15px 10px;">
+                    <strong>${booking.fullName}</strong><br>
+                    <small style="color: var(--black-coral);">${booking.email}</small><br>
+                    <small style="color: var(--black-coral);">${booking.phone}</small>
+                </td>
+                <td style="padding: 15px 10px;">${booking.tourId || 'N/A'}</td>
+                <td style="padding: 15px 10px;">${new Date(booking.travelDate).toLocaleDateString()}</td>
+                <td style="padding: 15px 10px;">${booking.guests}</td>
+                <td style="padding: 15px 10px;">
+                    <span style="padding: 4px 10px; border-radius: 4px; font-weight: 600; font-size: 1.2rem; background: ${booking.status === 'confirmed' ? '#e8f5e9' : booking.status === 'cancelled' ? '#ffebee' : '#fff3cd'}; color: ${booking.status === 'confirmed' ? '#2e7d32' : booking.status === 'cancelled' ? '#c62828' : '#f57c00'};">
+                        ${booking.status.toUpperCase()}
+                    </span>
+                </td>
+                <td style="padding: 15px 10px;">
+                    <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                        ${booking.status !== 'confirmed' ? `<button class="btn btn-primary" onclick="updateBookingStatus('${booking._id}', 'confirmed')" style="padding: 6px 12px; font-size: 1.3rem;">Confirm</button>` : ''}
+                        ${booking.status !== 'cancelled' ? `<button class="btn btn-outline" onclick="updateBookingStatus('${booking._id}', 'cancelled')" style="padding: 6px 12px; font-size: 1.3rem;">Cancel</button>` : ''}
+                        <button class="btn btn-outline" onclick="deleteBooking('${booking._id}')" style="padding: 6px 12px; font-size: 1.3rem; background: #ffebee; border-color: #f44336; color: #f44336;">Delete</button>
+                    </div>
+                </td>
+            `;
+            rows.appendChild(row);
+        });
+    } catch (err) {
+        msg.textContent = `Error: ${err.message}`;
+        console.error('Failed to load bookings:', err);
+    }
+}
+
+// Tour actions
+async function approveTour(id) {
+    try {
+        const res = await fetch(`${API_BASE}/api/admin/tours/${id}/status`, {
+            method: 'PATCH',
+            headers: authHeaders(),
+            body: JSON.stringify({ status: 'approved' })
+        });
+        const data = await res.json();
+        if (!data.ok) throw new Error(data.message);
+        alert('Tour approved!');
+        loadApproveTours();
+        loadStats();
+    } catch (err) {
+        alert(`Error: ${err.message}`);
+    }
+}
+
+async function rejectTour(id) {
+    try {
+        const res = await fetch(`${API_BASE}/api/admin/tours/${id}/status`, {
+            method: 'PATCH',
+            headers: authHeaders(),
+            body: JSON.stringify({ status: 'rejected' })
+        });
+        const data = await res.json();
+        if (!data.ok) throw new Error(data.message);
+        alert('Tour rejected');
+        loadApproveTours();
+        loadStats();
+    } catch (err) {
+        alert(`Error: ${err.message}`);
+    }
+}
+
+async function deleteTour(id) {
+    if (!confirm('Delete this tour permanently?')) return;
+    try {
+        const res = await fetch(`${API_BASE}/api/admin/tours/${id}`, {
+            method: 'DELETE',
+            headers: authHeaders()
+        });
+        const data = await res.json();
+        if (!data.ok) throw new Error(data.message);
+        alert('Tour deleted');
+        loadApproveTours();
+        loadStats();
+    } catch (err) {
+        alert(`Error: ${err.message}`);
+    }
+}
+
+// Booking actions
+async function updateBookingStatus(id, status) {
+    try {
+        const res = await fetch(`${API_BASE}/api/bookings/${id}/status`, {
+            method: 'PATCH',
+            headers: authHeaders(),
+            body: JSON.stringify({ status })
+        });
+        const data = await res.json();
+        if (!data.ok) throw new Error(data.message);
+        alert(`Booking ${status}!`);
+        loadBookings();
+        loadStats();
+    } catch (err) {
+        alert(`Error: ${err.message}`);
+    }
+}
+
+async function deleteBooking(id) {
+    if (!confirm('Delete this booking?')) return;
+    try {
+        const res = await fetch(`${API_BASE}/api/bookings/${id}`, {
+            method: 'DELETE',
+            headers: authHeaders()
+        });
+        const data = await res.json();
+        if (!data.ok) throw new Error(data.message);
+        alert('Booking deleted');
+        loadBookings();
+        loadStats();
+    } catch (err) {
+        alert(`Error: ${err.message}`);
+    }
+}
+
+// Event listeners
+document.getElementById('loadToursBtn').addEventListener('click', loadApproveTours);
+document.getElementById('loadBookingsBtn').addEventListener('click', loadBookings);
+document.getElementById('searchGuidesBtn').addEventListener('click', filterGuides);
+document.getElementById('refreshGuidesBtn').addEventListener('click', loadGuides);
+document.getElementById('closeGuideDetails').addEventListener('click', () => {
+    document.getElementById('guideDetailsSection').style.display = 'none';
+});
+
+// Allow Enter key to search
+document.getElementById('guideSearch').addEventListener('keypress', (e) => {
+    if (e.key === 'Enter') filterGuides();
+});
+
+// Load initial data
+document.addEventListener('DOMContentLoaded', () => {
+    loadStats();
+    loadGuides();
+});
+</script>
+
+</body>
+</html>

@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin — Bookings</title>
+    <link rel="shortcut icon" href="./favicon.svg" type="image/svg+xml">
+    <link rel="stylesheet" href="./assets/css/style.css">
+    <link rel="stylesheet" href="./assets/css/brand-colors.css">
+</head>
+<body>
+
+<header class="header" data-header>
+    <div class="container">
+        <a href="./admin-bookings.html"><h1 class="logo">Admin</h1></a>
+        <nav class="navbar" style="all: unset; display:flex; gap:12px; align-items:center;">
+            <a href="./admin.html" class="btn btn-secondary">Tours</a>
+            <a href="./index.html" class="btn btn-secondary">Website</a>
+            <button class="btn btn-outline" id="logoutBtn" type="button">Logout</button>
+        </nav>
+    </div>
+</header>
+
+<main>
+    <section class="section" style="padding-top:120px;">
+        <div class="container">
+
+            <div class="popular-card" style="padding:18px;">
+                <h2 class="h2 section-title">Bookings Manager</h2>
+
+                <div style="display:flex; gap:10px; flex-wrap:wrap; align-items:center; margin-top:12px;">
+                    <input id="q" class="newsletter-input" placeholder="Search name/email/phone/tour..." style="flex:1; min-width:260px;">
+                    <select id="status" class="newsletter-input" style="max-width:240px;">
+                        <option value="">All statuses</option>
+                        <option value="pending">Pending</option>
+                        <option value="confirmed">Confirmed</option>
+                        <option value="cancelled">Cancelled</option>
+                    </select>
+                    <button class="btn btn-primary" id="loadBtn" type="button">Load</button>
+                </div>
+
+                <p id="msg" style="margin-top:10px; font-weight:700;"></p>
+
+                <div style="overflow:auto; margin-top:12px;">
+                    <table style="width:100%; border-collapse: collapse; font-size: 1.4rem;">
+                        <thead>
+                        <tr style="text-align:left; border-bottom:1px solid hsla(0,0%,0%,0.12);">
+                            <th style="padding:10px;">Client</th>
+                            <th style="padding:10px;">Tour</th>
+                            <th style="padding:10px;">Date</th>
+                            <th style="padding:10px;">Guests</th>
+                            <th style="padding:10px;">Status</th>
+                            <th style="padding:10px;">Actions</th>
+                        </tr>
+                        </thead>
+                        <tbody id="rows"></tbody>
+                    </table>
+                </div>
+
+            </div>
+
+        </div>
+    </section>
+</main>
+
+<script src="./assets/js/admin-auth.js"></script>
+<script src="./assets/js/admin-bookings.js"></script>
+</body>
+</html>

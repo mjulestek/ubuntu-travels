@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Plan Your Custom Trip - Ubuntu Travels</title>
+
+    <link rel="shortcut icon" href="./favicon.svg" type="image/svg+xml">
+    <link rel="stylesheet" href="./assets/css/style.css">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Abril+Fatface&family=Comforter+Brush&family=Heebo:wght@400;500;600;700&family=Poppins:wght@400;600;700;800&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="./assets/css/brand-colors.css">
+</head>
+
+<body id="top">
+
+<header class="header" data-header>
+    <div class="container">
+
+        <a href="./index.html" style="text-decoration: none;">
+            <h1 class="logo">
+                <ion-icon name="paw-outline" class="logo-icon"></ion-icon>
+                <div class="logo-text">
+                    <span class="logo-main">Ubuntu Travels</span>
+                    <span class="logo-tagline">Explore East Africa</span>
+                </div>
+            </h1>
+        </a>
+
+        <button class="nav-toggle-btn" data-nav-toggle-btn aria-label="Toggle Menu">
+            <ion-icon name="menu-outline" class="open"></ion-icon>
+            <ion-icon name="close-outline" class="close"></ion-icon>
+        </button>
+
+        <nav class="navbar">
+            <ul class="navbar-list">
+            </ul>
+
+            <div style="display: flex; gap: 12px; align-items: center;">
+                <a href="./plan-trip.html" class="btn btn-primary" style="background: var(--white-1); color: var(--viridian-green); border: 2px solid var(--viridian-green); font-weight: 600; display: flex; align-items: center; gap: 6px;">
+                    <ion-icon name="map-outline" style="font-size:18px;"></ion-icon>
+                    Plan Your Trip
+                </a>
+                <a href="./auth.html" class="btn btn-secondary">Sign In</a>
+            </div>
+        </nav>
+
+    </div>
+</header>
+
+<main>
+    <article>
+
+        <section class="section" style="padding-top: 120px; padding-bottom: 60px;">
+            <div class="container">
+
+                <p class="section-subtitle">Customize Your Adventure</p>
+                <h2 class="h2 section-title">Plan Your Custom Trip</h2>
+                <p style="color: var(--battleship-gray); font-size: 1.6rem; line-height: 1.8; margin-top: 15px; max-width: 800px;">
+                    Create your perfect East African adventure by selecting multiple tours and destinations. 
+                    Our team will craft a personalized itinerary just for you.
+                </p>
+
+                <div style="margin-top: 40px; display: grid; gap: 30px; grid-template-columns: 1fr;">
+
+                    <!-- Custom Trip Form -->
+                    <div class="popular-card" style="padding: 30px;">
+                        <form id="customTripForm">
+                            
+                            <!-- Personal Information -->
+                            <div style="margin-bottom: 30px;">
+                                <h3 class="h3" style="margin-bottom: 20px; display: flex; align-items: center; gap: 10px;">
+                                    <ion-icon name="person-outline" style="font-size: 2.4rem; color: var(--viridian-green);"></ion-icon>
+                                    Your Information
+                                </h3>
+                                
+                                <div style="display: grid; gap: 18px;">
+                                    <div>
+                                        <label style="font-weight: 600; font-size: 1.4rem; color: var(--black-coral); display: block; margin-bottom: 6px;">
+                                            Full Name <span style="color: #ff4444;">*</span>
+                                        </label>
+                                        <input type="text" name="fullName" required 
+                                               placeholder="Enter your full name" 
+                                               class="newsletter-input"
+                                               minlength="2" maxlength="100">
+                                    </div>
+
+                                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                                        <div>
+                                            <label style="font-weight: 600; font-size: 1.4rem; color: var(--black-coral); display: block; margin-bottom: 6px;">
+                                                Email <span style="color: #ff4444;">*</span>
+                                            </label>
+                                            <input type="email" name="email" required 
+                                                   placeholder="your.email@example.com" 
+                                                   class="newsletter-input">
+                                        </div>
+
+                                        <div>
+                                            <label style="font-weight: 600; font-size: 1.4rem; color: var(--black-coral); display: block; margin-bottom: 6px;">
+                                                Phone <span style="color: #ff4444;">*</span>
+                                            </label>
+                                            <input type="tel" name="phone" required 
+                                                   placeholder="+1234567890" 
+                                                   class="newsletter-input">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Trip Details -->
+                            <div style="margin-bottom: 30px;">
+                                <h3 class="h3" style="margin-bottom: 20px; display: flex; align-items: center; gap: 10px;">
+                                    <ion-icon name="calendar-outline" style="font-size: 2.4rem; color: var(--viridian-green);"></ion-icon>
+                                    Trip Details
+                                </h3>
+                                
+                                <div style="display: grid; gap: 18px;">
+                                    <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 15px;">
+                                        <div>
+                                            <label style="font-weight: 600; font-size: 1.4rem; color: var(--black-coral); display: block; margin-bottom: 6px;">
+                                                Start Date <span style="color: #ff4444;">*</span>
+                                            </label>
+                                            <input type="date" name="startDate" required 
+                                                   class="newsletter-input" id="startDate">
+                                        </div>
+
+                                        <div>
+                                            <label style="font-weight: 600; font-size: 1.4rem; color: var(--black-coral); display: block; margin-bottom: 6px;">
+                                                Duration (Days) <span style="color: #ff4444;">*</span>
+                                            </label>
+                                            <input type="number" name="duration" min="1" max="30" value="7" required 
+                                                   class="newsletter-input">
+                                        </div>
+
+                                        <div>
+                                            <label style="font-weight: 600; font-size: 1.4rem; color: var(--black-coral); display: block; margin-bottom: 6px;">
+                                                Travelers <span style="color: #ff4444;">*</span>
+                                            </label>
+                                            <input type="number" name="travelers" min="1" max="50" value="2" required 
+                                                   class="newsletter-input">
+                                        </div>
+                                    </div>
+
+                                    <div>
+                                        <label style="font-weight: 600; font-size: 1.4rem; color: var(--black-coral); display: block; margin-bottom: 6px;">
+                                            Budget Range <span style="color: #ff4444;">*</span>
+                                        </label>
+                                        <select name="budget" required class="newsletter-input">
+                                            <option value="">Select your budget</option>
+                                            <option value="economy">Economy ($500 - $1,500 per person)</option>
+                                            <option value="moderate">Moderate ($1,500 - $3,000 per person)</option>
+                                            <option value="luxury">Luxury ($3,000 - $5,000 per person)</option>
+                                            <option value="premium">Premium ($5,000+ per person)</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Select Tours -->
+                            <div style="margin-bottom: 30px;">
+                                <h3 class="h3" style="margin-bottom: 15px; display: flex; align-items: center; gap: 10px;">
+                                    <ion-icon name="map-outline" style="font-size: 2.4rem; color: var(--viridian-green);"></ion-icon>
+                                    Select Tours to Combine
+                                </h3>
+                                <p style="color: var(--battleship-gray); font-size: 1.3rem; margin-bottom: 15px;">
+                                    Choose multiple tours to create your custom itinerary (select at least one)
+                                </p>
+                                
+                                <div id="toursSelection" style="display: grid; gap: 15px;">
+                                    <!-- Tours will be loaded here dynamically -->
+                                    <p style="text-align: center; color: var(--battleship-gray); padding: 20px;">
+                                        <ion-icon name="hourglass-outline" style="font-size: 3rem; color: var(--viridian-green);"></ion-icon>
+                                        <br>Loading available tours...
+                                    </p>
+                                </div>
+                            </div>
+
+                            <!-- Special Requests -->
+                            <div style="margin-bottom: 30px;">
+                                <h3 class="h3" style="margin-bottom: 15px; display: flex; align-items: center; gap: 10px;">
+                                    <ion-icon name="chatbox-outline" style="font-size: 2.4rem; color: var(--viridian-green);"></ion-icon>
+                                    Special Requests & Preferences
+                                </h3>
+                                
+                                <textarea name="specialRequests" 
+                                          placeholder="Tell us about your preferences: dietary requirements, accommodation preferences, activities you'd like to include, accessibility needs, or any other special requests..." 
+                                          class="newsletter-input"
+                                          style="min-height: 120px; resize: vertical;"
+                                          maxlength="1000"></textarea>
+                                <p style="font-size: 1.2rem; color: var(--battleship-gray); margin-top: 5px;">
+                                    Optional - Help us personalize your experience (max 1000 characters)
+                                </p>
+                            </div>
+
+                            <!-- Submit Button -->
+                            <button type="submit" class="btn btn-primary" style="width: 100%; padding: 18px; font-size: 1.7rem; display: flex; align-items: center; justify-content: center; gap: 10px;">
+                                <ion-icon name="paper-plane-outline" style="font-size: 2.4rem;"></ion-icon>
+                                Submit Custom Trip Request
+                            </button>
+                        </form>
+
+                        <!-- Success/Error Message -->
+                        <div id="message" style="margin-top: 20px; font-weight: 600; text-align: center; padding: 15px; border-radius: 8px; display: none;"></div>
+
+                        <!-- Info Box -->
+                        <div style="margin-top: 25px; padding: 20px; background: #e8f5e9; border-left: 4px solid var(--viridian-green); border-radius: 6px;">
+                            <div style="display: flex; gap: 12px; align-items: start;">
+                                <ion-icon name="information-circle-outline" style="font-size: 2.8rem; color: var(--viridian-green); flex-shrink: 0;"></ion-icon>
+                                <div>
+                                    <p style="font-size: 1.4rem; color: var(--black-coral); font-weight: 600; margin-bottom: 8px;">
+                                        What happens next?
+                                    </p>
+                                    <ul style="font-size: 1.3rem; color: var(--black-coral); line-height: 1.8; padding-left: 20px;">
+                                        <li>Our travel experts will review your custom trip request</li>
+                                        <li>We'll create a personalized itinerary combining your selected tours</li>
+                                        <li>You'll receive a detailed proposal with pricing within 24-48 hours</li>
+                                        <li>We'll work with you to refine the itinerary until it's perfect</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+        </section>
+
+    </article>
+</main>
+
+<!-- FOOTER -->
+<footer class="footer" style="background: var(--oxford-blue); padding: 40px 0;">
+  <div class="container">
+    <div style="text-align: center; max-width: 600px; margin: 0 auto;">
+      
+      <a href="./index.html" style="text-decoration: none;">
+        <h2 class="logo" style="margin-bottom: 15px;">
+          <ion-icon name="paw-outline" class="logo-icon"></ion-icon>
+          <div class="logo-text">
+            <span class="logo-main">Ubuntu Travels</span>
+            <span class="logo-tagline">Explore East Africa</span>
+          </div>
+        </h2>
+      </a>
+
+      <p style="color: var(--light-gray); font-size: 1.4rem; line-height: 1.8; margin-bottom: 25px;">
+        Create your perfect East African adventure. Our team will craft a personalized itinerary just for you.
+      </p>
+
+      <div style="display: flex; justify-content: center; gap: 20px; margin-bottom: 25px; flex-wrap: wrap;">
+        <a href="./index.html" class="footer-link" style="color: var(--light-gray); font-size: 1.4rem; transition: color 0.2s;">Home</a>
+        <a href="./index.html#about" class="footer-link" style="color: var(--light-gray); font-size: 1.4rem; transition: color 0.2s;">About</a>
+        <a href="./index.html#countries" class="footer-link" style="color: var(--light-gray); font-size: 1.4rem; transition: color 0.2s;">Countries</a>
+        <a href="./index.html#contact" class="footer-link" style="color: var(--light-gray); font-size: 1.4rem; transition: color 0.2s;">Contact</a>
+      </div>
+
+      <ul class="social-list" style="display: flex; justify-content: center; gap: 15px; margin-bottom: 20px;">
+        <li><a href="#" class="social-link"><ion-icon name="logo-facebook"></ion-icon></a></li>
+        <li><a href="#" class="social-link"><ion-icon name="logo-twitter"></ion-icon></a></li>
+        <li><a href="#" class="social-link"><ion-icon name="logo-instagram"></ion-icon></a></li>
+        <li><a href="#" class="social-link"><ion-icon name="logo-linkedin"></ion-icon></a></li>
+      </ul>
+
+      <p class="copyright" style="color: var(--light-gray); font-size: 1.3rem; margin: 0;">
+        &copy; 2026 <a href="./index.html" class="copyright-link" style="color: var(--viridian-green);">Ubuntu Travels</a>. All Rights Reserved
+      </p>
+
+    </div>
+  </div>
+</footer>
+
+<a href="#top" class="go-top" data-go-top aria-label="Go To Top">
+    <ion-icon name="chevron-up-outline"></ion-icon>
+</a>
+
+<script src="./assets/js/script.js"></script>
+<script src="./assets/js/app-config.js"></script>
+<script src="./assets/js/plan-trip.js"></script>
+
+<script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+<script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+
+</body>
+
+</html>

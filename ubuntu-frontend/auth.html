@@ -1,0 +1,643 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sign In — Ubuntu Travels</title>
+    
+    <link rel="shortcut icon" href="./favicon.svg" type="image/svg+xml">
+    <link rel="stylesheet" href="./assets/css/style.css">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Abril+Fatface&family=Comforter+Brush&family=Heebo:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Google Sign-In -->
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+    
+    <style>
+        /* Page Background */
+        body {
+            background-color: #FFF7EB !important;
+        }
+        
+        /* Dynamic Theme Variables */
+        :root {
+            --theme-color: #2196F3; /* Default: Tourist (blue) */
+            --theme-light: #E3F2FD;
+            --theme-dark: #1976D2;
+        }
+        
+        /* Tourist Theme - Blue */
+        body.theme-tourist {
+            --theme-color: #2196F3;
+            --theme-light: #E3F2FD;
+            --theme-dark: #1976D2;
+        }
+        
+        /* Tour Guide Theme - Amber/Orange */
+        body.theme-guide {
+            --theme-color: #FF9800;
+            --theme-light: #FFF7EB;
+            --theme-dark: #F57C00;
+        }
+        
+        .login-options {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .login-option {
+            padding: 30px 20px;
+            border: 2px solid var(--light-gray);
+            border-radius: var(--radius-6);
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: white;
+        }
+        
+        .login-option:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px hsla(0, 0%, 0%, 0.1);
+        }
+        
+        .login-option.active {
+            border-color: var(--theme-color);
+            background: var(--theme-light);
+        }
+        
+        .login-option ion-icon {
+            font-size: 4rem;
+            color: var(--theme-color);
+            margin-bottom: 10px;
+            transition: color 0.3s ease;
+        }
+        
+        .login-option.active ion-icon {
+            color: var(--theme-dark);
+        }
+        
+        .login-option h3 {
+            font-size: 1.8rem;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+        
+        .login-option p {
+            font-size: 1.3rem;
+            color: var(--black-coral);
+        }
+        
+        /* Theme-aware elements */
+        .btn-primary {
+            background: var(--theme-color) !important;
+            border-color: var(--theme-color) !important;
+        }
+        
+        .btn-primary:hover {
+            background: var(--theme-dark) !important;
+            border-color: var(--theme-dark) !important;
+        }
+        
+        #selectedTypeText {
+            color: var(--theme-color) !important;
+        }
+        
+        .theme-indicator {
+            background: var(--theme-light);
+            border-left: 4px solid var(--theme-color);
+            padding: 15px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            transition: all 0.3s ease;
+        }
+        
+        .password-strength {
+            height: 4px;
+            background: var(--light-gray);
+            border-radius: 2px;
+            margin-top: 5px;
+            overflow: hidden;
+        }
+        
+        .password-strength-bar {
+            height: 100%;
+            width: 0%;
+            transition: all 0.3s ease;
+        }
+        
+        .strength-weak { background: #ff4444; width: 33%; }
+        .strength-medium { background: #ff9800; width: 66%; }
+        .strength-strong { background: #00c853; width: 100%; }
+        
+        .google-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            width: 100%;
+            padding: 12px;
+            border: 2px solid var(--light-gray);
+            border-radius: var(--radius-6);
+            background: white;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        .google-btn:hover {
+            border-color: var(--theme-color);
+            background: var(--theme-light);
+        }
+        
+        .google-btn img {
+            width: 20px;
+            height: 20px;
+        }
+        
+        .divider {
+            display: flex;
+            align-items: center;
+            text-align: center;
+            margin: 20px 0;
+        }
+        
+        .divider::before,
+        .divider::after {
+            content: '';
+            flex: 1;
+            border-bottom: 1px solid var(--light-gray);
+        }
+        
+        .divider span {
+            padding: 0 10px;
+            color: var(--black-coral);
+            font-size: 1.3rem;
+        }
+    </style>
+    <link rel="stylesheet" href="./assets/css/brand-colors.css">
+</head>
+
+<body id="top">
+<header class="header" data-header>
+    <div class="container">
+        <a href="./index.html" style="text-decoration: none;">
+            <h1 class="logo">
+                <ion-icon name="paw-outline" class="logo-icon"></ion-icon>
+                <div class="logo-text">
+                    <span class="logo-main">Ubuntu Travels</span>
+                    <span class="logo-tagline">Explore East Africa</span>
+                </div>
+            </h1>
+        </a>
+        <nav class="navbar" style="opacity: 1; visibility: visible; display: flex; gap: 10px; align-items: center; padding: 0;">
+            <!-- Navigation removed for cleaner auth page -->
+        </nav>
+    </div>
+</header>
+
+<main>
+    <article>
+        <section class="section" style="padding-top: 120px; padding-bottom: 60px;">
+            <div class="container" style="max-width: 720px;">
+
+                <div class="popular-card" style="padding: 30px;">
+                    <p class="section-subtitle" style="text-align: center;">Welcome Back</p>
+                    <h2 class="h2 section-title" style="text-align: center; margin-bottom: 30px;">Sign In to Your Account</h2>
+
+                    <div style="background: #e8f5e9; border-left: 4px solid var(--viridian-green); padding: 15px; margin-bottom: 25px; border-radius: 4px;">
+                        <p style="color: var(--black-coral); font-size: 1.3rem; margin: 0;">
+                            <strong>ℹ️ Note:</strong> Admins should use the <a href="./admin-login.html" style="color: var(--viridian-green); text-decoration: underline;">admin login page</a>.
+                        </p>
+                    </div>
+
+                    <!-- Login Type Selection -->
+                    <div class="login-options" id="loginOptions">
+                        <div class="login-option active" data-type="tourist">
+                            <ion-icon name="person-outline"></ion-icon>
+                            <h3>Tourist</h3>
+                            <p>Discover & book tours</p>
+                        </div>
+                        <div class="login-option" data-type="guide">
+                            <ion-icon name="briefcase-outline"></ion-icon>
+                            <h3>Tour Guide</h3>
+                            <p>List your tours</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Selected Type Indicator -->
+                    <div class="theme-indicator" style="text-align: center;">
+                        <p style="font-size: 1.5rem; color: var(--black-coral); margin: 0;">
+                            <ion-icon name="checkmark-circle" style="vertical-align: middle; font-size: 2rem; color: var(--theme-color);"></ion-icon>
+                            <span id="actionText">Signing in</span> as: <strong id="selectedTypeText" style="font-size: 1.6rem;">Tourist</strong>
+                        </p>
+                    </div>
+
+                    <!-- Tab Buttons -->
+                    <div style="display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 20px;">
+                        <button class="btn btn-primary" id="tabLogin" type="button">Login</button>
+                        <button class="btn btn-outline" id="tabRegister" type="button">Register</button>
+                    </div>
+
+                    <!-- LOGIN FORM -->
+                    <form id="loginForm" style="display: grid; gap: 15px;">
+                        <input class="newsletter-input" type="email" name="email" placeholder="Email Address" required 
+                               pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$" 
+                               title="Please enter a valid email address">
+                        
+                        <div style="position: relative;">
+                            <input class="newsletter-input" type="password" name="password" id="loginPassword" placeholder="Password" required>
+                        </div>
+                        
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+                                <input type="checkbox" id="rememberMe" style="width: auto;">
+                                <span style="font-size: 1.4rem;">Remember me</span>
+                            </label>
+                            <a href="#" style="font-size: 1.4rem; color: var(--viridian-green);">Forgot password?</a>
+                        </div>
+                        
+                        <button class="btn btn-primary" type="submit" style="width: 100%;">Sign In</button>
+                        
+                        <div class="divider">
+                            <span>OR</span>
+                        </div>
+                        
+                        <button type="button" class="google-btn" id="googleSignIn">
+                            <svg width="20" height="20" viewBox="0 0 20 20">
+                                <path fill="#4285F4" d="M19.6 10.23c0-.82-.1-1.42-.25-2.05H10v3.72h5.5c-.15.96-.74 2.31-2.04 3.22v2.45h3.16c1.89-1.73 2.98-4.3 2.98-7.34z"/>
+                                <path fill="#34A853" d="M13.46 15.13c-.83.59-1.96 1-3.46 1-2.64 0-4.88-1.74-5.68-4.15H1.07v2.52C2.72 17.75 6.09 20 10 20c2.7 0 4.96-.89 6.62-2.42l-3.16-2.45z"/>
+                                <path fill="#FBBC05" d="M3.99 10c0-.69.12-1.35.32-1.97V5.51H1.07A9.973 9.973 0 000 10c0 1.61.39 3.14 1.07 4.49l3.24-2.52c-.2-.62-.32-1.28-.32-1.97z"/>
+                                <path fill="#EA4335" d="M10 3.88c1.88 0 3.13.81 3.85 1.48l2.84-2.76C14.96.99 12.7 0 10 0 6.09 0 2.72 2.25 1.07 5.51l3.24 2.52C5.12 5.62 7.36 3.88 10 3.88z"/>
+                            </svg>
+                            Continue with Google
+                        </button>
+                    </form>
+
+                    <!-- REGISTER FORM -->
+                    <form id="registerForm" style="display: none; grid-template-columns: 1fr; gap: 15px;">
+                        <!-- Personal Information -->
+                        <div style="padding: 15px; background: var(--white-2); border-radius: 6px;">
+                            <h4 style="margin-bottom: 15px; color: var(--viridian-green);">Personal Information</h4>
+                            
+                            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;">
+                                <input class="newsletter-input" type="text" name="firstName" placeholder="First Name *" required 
+                                       minlength="2" title="Please enter your first name">
+                                
+                                <input class="newsletter-input" type="text" name="lastName" placeholder="Last Name *" required 
+                                       minlength="2" title="Please enter your last name">
+                            </div>
+                            
+                            <input class="newsletter-input" type="email" name="email" placeholder="Email Address *" required 
+                                   pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$" 
+                                   title="Please enter a valid email address (e.g., user@example.com)"
+                                   style="margin-top: 15px;">
+                            
+                            <div style="position: relative; margin-top: 15px;">
+                                <input class="newsletter-input" type="password" name="password" id="registerPassword" 
+                                       placeholder="Password *" required minlength="8"
+                                       title="Password must be at least 8 characters">
+                                <div class="password-strength">
+                                    <div class="password-strength-bar" id="strengthBar"></div>
+                                </div>
+                                <p id="strengthText" style="font-size: 1.2rem; margin-top: 5px; color: var(--black-coral);"></p>
+                            </div>
+                        </div>
+
+                        <!-- Contact Information -->
+                        <div style="padding: 15px; background: var(--white-2); border-radius: 6px;">
+                            <h4 style="margin-bottom: 15px; color: var(--viridian-green);">Contact Information</h4>
+                            
+                            <input class="newsletter-input" type="tel" name="phone" placeholder="Phone Number (with country code, e.g., +250 123 456 789) *" required
+                                   pattern="[\+]?[0-9\s\-\(\)]+" title="Please enter a valid phone number">
+                            
+                            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-top: 15px;">
+                                <select class="newsletter-input" name="country" required>
+                                    <option value="">Select Country *</option>
+                                    <option value="Rwanda">Rwanda</option>
+                                    <option value="Uganda">Uganda</option>
+                                    <option value="Tanzania">Tanzania</option>
+                                    <option value="Kenya">Kenya</option>
+                                    <option value="Burundi">Burundi</option>
+                                    <option value="South Sudan">South Sudan</option>
+                                    <option value="Ethiopia">Ethiopia</option>
+                                    <option value="Other">Other</option>
+                                </select>
+                                
+                                <input class="newsletter-input" type="text" name="city" placeholder="City (optional)">
+                            </div>
+                            
+                            <textarea class="newsletter-input" name="address" placeholder="Address (optional)" 
+                                      style="min-height: 60px; resize: vertical; margin-top: 15px;"></textarea>
+                        </div>
+
+                        <!-- Business Information (for guides only) -->
+                        <div id="businessInfoSection" style="display: none; padding: 15px; background: var(--white-2); border-radius: 6px;">
+                            <h4 style="margin-bottom: 15px; color: var(--viridian-green);">Business Information</h4>
+                            
+                            <input class="newsletter-input" type="text" name="companyName" placeholder="Company/Business Name (optional)">
+                            
+                            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-top: 15px;">
+                                <select class="newsletter-input" name="businessType">
+                                    <option value="">Business Type (optional)</option>
+                                    <option value="Tour Operator">Tour Operator</option>
+                                    <option value="Individual Guide">Individual Guide</option>
+                                    <option value="Travel Agency">Travel Agency</option>
+                                    <option value="Hotel/Resort">Hotel/Resort</option>
+                                    <option value="Transport Service">Transport Service</option>
+                                    <option value="Other">Other</option>
+                                </select>
+                                
+                                <input class="newsletter-input" type="number" name="yearsOfExperience" 
+                                       placeholder="Years of Experience" min="0" max="50">
+                            </div>
+                            
+                            <div style="margin-top: 15px;">
+                                <label style="font-weight: 600; margin-bottom: 8px; display: block;">Languages Spoken:</label>
+                                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px;">
+                                    <label style="display: flex; align-items: center; gap: 5px; cursor: pointer;">
+                                        <input type="checkbox" name="languages" value="English" style="width: auto;">
+                                        <span>English</span>
+                                    </label>
+                                    <label style="display: flex; align-items: center; gap: 5px; cursor: pointer;">
+                                        <input type="checkbox" name="languages" value="French" style="width: auto;">
+                                        <span>French</span>
+                                    </label>
+                                    <label style="display: flex; align-items: center; gap: 5px; cursor: pointer;">
+                                        <input type="checkbox" name="languages" value="Swahili" style="width: auto;">
+                                        <span>Swahili</span>
+                                    </label>
+                                    <label style="display: flex; align-items: center; gap: 5px; cursor: pointer;">
+                                        <input type="checkbox" name="languages" value="Kinyarwanda" style="width: auto;">
+                                        <span>Kinyarwanda</span>
+                                    </label>
+                                    <label style="display: flex; align-items: center; gap: 5px; cursor: pointer;">
+                                        <input type="checkbox" name="languages" value="Spanish" style="width: auto;">
+                                        <span>Spanish</span>
+                                    </label>
+                                    <label style="display: flex; align-items: center; gap: 5px; cursor: pointer;">
+                                        <input type="checkbox" name="languages" value="German" style="width: auto;">
+                                        <span>German</span>
+                                    </label>
+                                </div>
+                            </div>
+                            
+                            <div style="margin-top: 15px;">
+                                <label style="font-weight: 600; margin-bottom: 8px; display: block;">Tour Specializations:</label>
+                                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px;">
+                                    <label style="display: flex; align-items: center; gap: 5px; cursor: pointer;">
+                                        <input type="checkbox" name="specializations" value="Wildlife Safari" style="width: auto;">
+                                        <span>Wildlife Safari</span>
+                                    </label>
+                                    <label style="display: flex; align-items: center; gap: 5px; cursor: pointer;">
+                                        <input type="checkbox" name="specializations" value="Gorilla Trekking" style="width: auto;">
+                                        <span>Gorilla Trekking</span>
+                                    </label>
+                                    <label style="display: flex; align-items: center; gap: 5px; cursor: pointer;">
+                                        <input type="checkbox" name="specializations" value="Cultural Tours" style="width: auto;">
+                                        <span>Cultural Tours</span>
+                                    </label>
+                                    <label style="display: flex; align-items: center; gap: 5px; cursor: pointer;">
+                                        <input type="checkbox" name="specializations" value="Adventure" style="width: auto;">
+                                        <span>Adventure</span>
+                                    </label>
+                                    <label style="display: flex; align-items: center; gap: 5px; cursor: pointer;">
+                                        <input type="checkbox" name="specializations" value="City Tours" style="width: auto;">
+                                        <span>City Tours</span>
+                                    </label>
+                                    <label style="display: flex; align-items: center; gap: 5px; cursor: pointer;">
+                                        <input type="checkbox" name="specializations" value="Hiking" style="width: auto;">
+                                        <span>Hiking</span>
+                                    </label>
+                                </div>
+                            </div>
+                            
+                            <textarea class="newsletter-input" name="bio" placeholder="Tell us about yourself and your experience..." 
+                                      style="min-height: 100px; resize: vertical; margin-top: 15px;" maxlength="1000"></textarea>
+                            <p style="font-size: 1.2rem; color: var(--battleship-gray); margin-top: 5px;">Max 1000 characters</p>
+                        </div>
+
+                        <!-- Terms and Preferences -->
+                        <div style="padding: 15px; background: var(--white-2); border-radius: 6px;">
+                            <label style="display: flex; align-items: start; gap: 10px; cursor: pointer; margin-bottom: 10px;">
+                                <input type="checkbox" name="termsAccepted" required style="width: auto; margin-top: 3px;">
+                                <span style="font-size: 1.3rem;">
+                                    I accept the <a href="#" style="color: var(--viridian-green); text-decoration: underline;">Terms and Conditions</a> 
+                                    and <a href="#" style="color: var(--viridian-green); text-decoration: underline;">Privacy Policy</a> *
+                                </span>
+                            </label>
+                            
+                            <label style="display: flex; align-items: start; gap: 10px; cursor: pointer;">
+                                <input type="checkbox" name="newsletter" style="width: auto; margin-top: 3px;">
+                                <span style="font-size: 1.3rem;">
+                                    Subscribe to our newsletter for travel tips and exclusive offers
+                                </span>
+                            </label>
+                        </div>
+
+                        <div id="roleSelectContainer" style="display: none;">
+                            <input type="hidden" name="role" id="roleSelect" value="guide">
+                        </div>
+                        
+                        <button class="btn btn-primary" type="submit" style="width: 100%; padding: 15px;">Create Account</button>
+                        
+                        <div class="divider">
+                            <span>OR</span>
+                        </div>
+                        
+                        <button type="button" class="google-btn" id="googleSignUpBtn">
+                            <svg width="20" height="20" viewBox="0 0 20 20">
+                                <path fill="#4285F4" d="M19.6 10.23c0-.82-.1-1.42-.25-2.05H10v3.72h5.5c-.15.96-.74 2.31-2.04 3.22v2.45h3.16c1.89-1.73 2.98-4.3 2.98-7.34z"/>
+                                <path fill="#34A853" d="M13.46 15.13c-.83.59-1.96 1-3.46 1-2.64 0-4.88-1.74-5.68-4.15H1.07v2.52C2.72 17.75 6.09 20 10 20c2.7 0 4.96-.89 6.62-2.42l-3.16-2.45z"/>
+                                <path fill="#FBBC05" d="M3.99 10c0-.69.12-1.35.32-1.97V5.51H1.07A9.973 9.973 0 000 10c0 1.61.39 3.14 1.07 4.49l3.24-2.52c-.2-.62-.32-1.28-.32-1.97z"/>
+                                <path fill="#EA4335" d="M10 3.88c1.88 0 3.13.81 3.85 1.48l2.84-2.76C14.96.99 12.7 0 10 0 6.09 0 2.72 2.25 1.07 5.51l3.24 2.52C5.12 5.62 7.36 3.88 10 3.88z"/>
+                            </svg>
+                            Sign up with Google
+                        </button>
+                        
+                        <p style="font-size: 1.2rem; color: var(--battleship-gray); text-align: center; margin-top: 10px;">
+                            * Required fields
+                        </p>
+                    </form>
+
+                    <p id="msg" style="margin-top: 15px; font-weight: 600; text-align: center;"></p>
+                    
+                    <p style="margin-top: 20px; padding-top: 20px; border-top: 1px solid var(--light-gray); color: var(--battleship-gray); font-size: 1.3rem; text-align: center;">
+                        <ion-icon name="information-circle-outline" style="vertical-align: middle;"></ion-icon>
+                        Tour guides require admin approval before creating tours.
+                    </p>
+                </div>
+
+            </div>
+        </section>
+    </article>
+</main>
+
+<!-- FOOTER -->
+<footer class="footer" style="background-image: url('./assets/images/footer-bg.png')">
+  <div class="container">
+
+    <div class="footer-top">
+
+      <ul class="footer-list">
+        <li>
+          <p class="footer-list-title">Top destination</p>
+        </li>
+        <li><a href="./country.html?c=Rwanda" class="footer-link">Rwanda</a></li>
+        <li><a href="./country.html?c=Uganda" class="footer-link">Uganda</a></li>
+        <li><a href="./country.html?c=Kenya" class="footer-link">Kenya</a></li>
+        <li><a href="./country.html?c=Tanzania" class="footer-link">Tanzania</a></li>
+      </ul>
+
+      <ul class="footer-list">
+        <li>
+          <p class="footer-list-title">Categories</p>
+        </li>
+        <li><a href="./index.html#tours" class="footer-link">Travel</a></li>
+        <li><a href="./index.html#about" class="footer-link">Lifestyle</a></li>
+        <li><a href="./index.html#contact" class="footer-link">Food & Drink</a></li>
+      </ul>
+
+      <ul class="footer-list">
+        <li>
+          <p class="footer-list-title">Quick links</p>
+        </li>
+        <li><a href="./index.html#about" class="footer-link">About</a></li>
+        <li><a href="./index.html#contact" class="footer-link">Contact</a></li>
+        <li><a href="./index.html#countries" class="footer-link">Countries</a></li>
+        <li><a href="#" class="footer-link">Terms & Conditions</a></li>
+      </ul>
+
+      <div class="footer-list">
+        <p class="footer-list-title">Get a newsletter</p>
+        <p class="newsletter-text">For the latest deals and tips, travel no further than your inbox</p>
+
+        <form action="" class="newsletter-form" id="newsletterForm">
+          <input type="email" name="email" required placeholder="Email address" class="newsletter-input">
+          <button type="submit" class="btn btn-primary">Subscribe</button>
+        </form>
+
+        <p id="newsletterMsg" style="margin-top:10px; font-weight:700;"></p>
+      </div>
+
+    </div>
+
+    <div class="footer-bottom">
+      <a href="./index.html" class="logo">Ubuntu Travels</a>
+
+      <p class="copyright">
+        &copy; 2026 <a href="./index.html" class="copyright-link">Ubuntu Travels</a>. All Rights Reserved
+      </p>
+
+      <ul class="social-list">
+        <li><a href="#" class="social-link"><ion-icon name="logo-facebook"></ion-icon></a></li>
+        <li><a href="#" class="social-link"><ion-icon name="logo-twitter"></ion-icon></a></li>
+        <li><a href="#" class="social-link"><ion-icon name="logo-instagram"></ion-icon></a></li>
+        <li><a href="#" class="social-link"><ion-icon name="logo-linkedin"></ion-icon></a></li>
+      </ul>
+    </div>
+
+  </div>
+</footer>
+
+<script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+<script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+
+<script src="./assets/js/app-config.js"></script>
+<script src="./assets/js/auth.js"></script>
+<script src="./assets/js/newsletter.js"></script>
+
+<script>
+// Login type selection
+let selectedLoginType = 'tourist';
+
+// Set initial theme
+document.body.classList.add('theme-tourist');
+
+document.querySelectorAll('.login-option').forEach(option => {
+    option.addEventListener('click', () => {
+        document.querySelectorAll('.login-option').forEach(opt => opt.classList.remove('active'));
+        option.classList.add('active');
+        selectedLoginType = option.getAttribute('data-type');
+        
+        // Update theme
+        document.body.classList.remove('theme-tourist', 'theme-guide');
+        document.body.classList.add(`theme-${selectedLoginType}`);
+        
+        // Update the selected type text
+        const selectedTypeText = document.getElementById('selectedTypeText');
+        if (selectedTypeText) {
+            selectedTypeText.textContent = selectedLoginType === 'guide' ? 'Tour Guide' : 'Tourist';
+        }
+        
+        // Show/hide business info section for tour guides (registration only)
+        const businessInfoSection = document.getElementById('businessInfoSection');
+        if (businessInfoSection) {
+            if (selectedLoginType === 'guide') {
+                businessInfoSection.style.display = 'block';
+            } else {
+                businessInfoSection.style.display = 'none';
+            }
+        }
+    });
+});
+
+// Password strength checker
+const registerPassword = document.getElementById('registerPassword');
+const strengthBar = document.getElementById('strengthBar');
+const strengthText = document.getElementById('strengthText');
+
+registerPassword?.addEventListener('input', (e) => {
+    const password = e.target.value;
+    const strength = checkPasswordStrength(password);
+    
+    strengthBar.className = 'password-strength-bar';
+    
+    if (strength.score === 0) {
+        strengthBar.classList.add('strength-weak');
+        strengthText.textContent = 'Weak password';
+        strengthText.style.color = '#ff4444';
+    } else if (strength.score === 1) {
+        strengthBar.classList.add('strength-medium');
+        strengthText.textContent = 'Medium password';
+        strengthText.style.color = '#ff9800';
+    } else {
+        strengthBar.classList.add('strength-strong');
+        strengthText.textContent = 'Strong password';
+        strengthText.style.color = '#00c853';
+    }
+});
+
+function checkPasswordStrength(password) {
+    let score = 0;
+    
+    if (password.length >= 8) score++;
+    if (/[a-z]/.test(password) && /[A-Z]/.test(password)) score++;
+    if (/\d/.test(password)) score++;
+    if (/[^a-zA-Z\d]/.test(password)) score++;
+    
+    return { score: Math.min(score, 2) };
+}
+
+// Google Sign-In (placeholder - requires Google OAuth setup)
+document.getElementById('googleSignIn')?.addEventListener('click', () => {
+    alert('Google Sign-In integration requires OAuth 2.0 setup.\n\nTo implement:\n1. Create Google Cloud Project\n2. Enable Google Sign-In API\n3. Get Client ID\n4. Configure OAuth consent screen\n\nFor now, please use email/password login.');
+});
+
+document.getElementById('googleSignUpBtn')?.addEventListener('click', () => {
+    alert('Google Sign-Up integration requires OAuth 2.0 setup.\n\nTo implement:\n1. Create Google Cloud Project\n2. Enable Google Sign-In API\n3. Get Client ID\n4. Configure OAuth consent screen\n\nFor now, please use email/password registration.');
+});
+
+// Pre-select role based on URL parameter (only tourist or guide allowed)
+const urlParams = new URLSearchParams(window.location.search);
+const roleParam = urlParams.get('role');
+if (roleParam === 'guide') {
+    document.querySelector('.login-option[data-type="guide"]')?.click();
+}
+</script>
+
+</body>
+</html>

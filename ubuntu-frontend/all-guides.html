@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>All Vetted Guides — Ubuntu Travels</title>
+    
+    <link rel="shortcut icon" href="./favicon.svg" type="image/svg+xml">
+    <link rel="stylesheet" href="./assets/css/style.css">
+    <link rel="stylesheet" href="./assets/css/brand-colors.css">
+    <link rel="stylesheet" href="./assets/css/guides-section.css">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+    
+    <style>
+        body { background: #FFF7EB; }
+        
+        .all-guides-hero {
+            background: linear-gradient(135deg, #E3702D 0%, #c95c20 100%);
+            padding: 80px 20px 60px;
+            text-align: center;
+            color: white;
+        }
+        
+        .all-guides-hero h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(2.5rem, 5vw, 4rem);
+            font-weight: 900;
+            margin-bottom: 20px;
+            line-height: 1.1;
+        }
+        
+        .all-guides-hero p {
+            font-size: 1.2rem;
+            max-width: 600px;
+            margin: 0 auto;
+            opacity: 0.95;
+            line-height: 1.6;
+        }
+        
+        .all-guides-container {
+            max-width: 1200px;
+            margin: -40px auto 80px;
+            padding: 0 20px;
+        }
+        
+        .guides-count {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+            margin-bottom: 40px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+        
+        .guides-count-number {
+            font-size: 3rem;
+            font-weight: 900;
+            color: #E3702D;
+            font-family: 'Playfair Display', serif;
+        }
+        
+        .guides-count-text {
+            font-size: 1.1rem;
+            color: #666;
+            margin-top: 5px;
+        }
+        
+        .filters-section {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            margin-bottom: 40px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+        }
+        
+        .filters-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: #1a1a1a;
+        }
+        
+        .filters-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+        
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        
+        .filter-group label {
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: #333;
+        }
+        
+        .filter-group select {
+            padding: 10px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 1rem;
+            cursor: pointer;
+        }
+        
+        .filter-group select:focus {
+            outline: none;
+            border-color: #E3702D;
+        }
+        
+        .all-guides-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 24px;
+        }
+        
+        @media (max-width: 768px) {
+            .all-guides-grid {
+                grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            }
+        }
+        
+        .loading-state,
+        .error-state,
+        .empty-state {
+            text-align: center;
+            padding: 80px 20px;
+            background: white;
+            border-radius: 12px;
+        }
+        
+        .loading-state {
+            color: #666;
+        }
+        
+        .error-state {
+            color: #c62828;
+        }
+        
+        .empty-state {
+            color: #666;
+        }
+        
+        .empty-state svg {
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+
+<header class="header" data-header>
+    <div class="container">
+        <a href="./index.html" style="text-decoration: none;">
+            <h1 class="logo">
+                <ion-icon name="paw-outline" class="logo-icon"></ion-icon>
+                <div class="logo-text">
+                    <span class="logo-main">Ubuntu Travels</span>
+                    <span class="logo-tagline">Explore East Africa</span>
+                </div>
+            </h1>
+        </a>
+        <nav class="navbar">
+        </nav>
+    </div>
+</header>
+
+<main>
+    <!-- Hero Section -->
+    <section class="all-guides-hero">
+        <h1>Our Vetted Tour Guides</h1>
+        <p>Meet our carefully selected and verified local guides who will make your East African adventure unforgettable</p>
+    </section>
+    
+    <!-- Main Content -->
+    <div class="all-guides-container">
+        <!-- Guides Count -->
+        <div class="guides-count" id="guidesCount" style="display:none;">
+            <div class="guides-count-number" id="countNumber">0</div>
+            <div class="guides-count-text">Verified Local Guides</div>
+        </div>
+        
+        <!-- Filters -->
+        <div class="filters-section" id="filtersSection" style="display:none;">
+            <div class="filters-title">Filter Guides</div>
+            <div class="filters-grid">
+                <div class="filter-group">
+                    <label>Country</label>
+                    <select id="filterCountry">
+                        <option value="">All Countries</option>
+                        <option value="Rwanda">Rwanda</option>
+                        <option value="Uganda">Uganda</option>
+                        <option value="Tanzania">Tanzania</option>
+                        <option value="Kenya">Kenya</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label>Specialization</label>
+                    <select id="filterSpecialization">
+                        <option value="">All Specializations</option>
+                        <option value="Wildlife">Wildlife Safari</option>
+                        <option value="Gorilla Trekking">Gorilla Trekking</option>
+                        <option value="Cultural Tours">Cultural Tours</option>
+                        <option value="Adventure">Adventure</option>
+                        <option value="Hiking">Hiking</option>
+                        <option value="City Tours">City Tours</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label>Language</label>
+                    <select id="filterLanguage">
+                        <option value="">All Languages</option>
+                        <option value="English">English</option>
+                        <option value="French">French</option>
+                        <option value="Swahili">Swahili</option>
+                        <option value="Kinyarwanda">Kinyarwanda</option>
+                        <option value="Spanish">Spanish</option>
+                        <option value="German">German</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Loading State -->
+        <div class="loading-state" id="loadingState">
+            <p style="font-size: 1.2rem;">Loading guides...</p>
+        </div>
+        
+        <!-- Error State -->
+        <div class="error-state" id="errorState" style="display:none;">
+            <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10"/>
+                <line x1="12" y1="8" x2="12" y2="12"/>
+                <line x1="12" y1="16" x2="12.01" y2="16"/>
+            </svg>
+            <p style="font-size: 1.2rem; margin-top: 15px;">Unable to load guides</p>
+            <button onclick="location.reload()" class="btn btn-primary" style="margin-top: 20px;">Try Again</button>
+        </div>
+        
+        <!-- Empty State -->
+        <div class="empty-state" id="emptyState" style="display:none;">
+            <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="#ccc" stroke-width="1.5">
+                <circle cx="12" cy="8" r="4"/>
+                <path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/>
+            </svg>
+            <p style="font-size: 1.2rem; margin-top: 15px;">No guides found matching your filters</p>
+            <button onclick="resetFilters()" class="btn btn-outline" style="margin-top: 20px;">Clear Filters</button>
+        </div>
+        
+        <!-- Guides Grid -->
+        <div class="all-guides-grid" id="allGuidesGrid" style="display:none;"></div>
+    </div>
+</main>
+
+<!-- Footer -->
+<footer class="footer" style="background-image: url('./assets/images/footer-bg.png')">
+    <div class="container">
+        <div class="footer-bottom">
+            <a href="./index.html" class="logo">Ubuntu Travels</a>
+            <p class="copyright">
+                &copy; 2026 <a href="./index.html" class="copyright-link">Ubuntu Travels</a>. All Rights Reserved
+            </p>
+        </div>
+    </div>
+</footer>
+
+<script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+<script src="./assets/js/config.js"></script>
+<script src="./assets/js/all-guides.js"></script>
+
+</body>
+</html>

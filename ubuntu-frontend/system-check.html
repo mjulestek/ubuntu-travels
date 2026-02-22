@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>System Check - Ubuntu Travels</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: #f5f5f5;
+            padding: 40px 20px;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            padding: 40px;
+            box-shadow: 0 2px 20px rgba(0,0,0,0.08);
+        }
+        h1 {
+            font-size: 2rem;
+            margin-bottom: 10px;
+            color: #1a1a1a;
+        }
+        .subtitle {
+            color: #666;
+            margin-bottom: 40px;
+            font-size: 1rem;
+        }
+        .check-item {
+            padding: 20px;
+            margin-bottom: 16px;
+            border-radius: 8px;
+            border: 2px solid #e0e0e0;
+            background: #fafafa;
+        }
+        .check-item.loading {
+            border-color: #2196F3;
+            background: #E3F2FD;
+        }
+        .check-item.success {
+            border-color: #4CAF50;
+            background: #E8F5E9;
+        }
+        .check-item.error {
+            border-color: #f44336;
+            background: #FFEBEE;
+        }
+        .check-title {
+            font-weight: 600;
+            font-size: 1.1rem;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .check-message {
+            font-size: 0.95rem;
+            color: #555;
+            line-height: 1.6;
+        }
+        .icon {
+            width: 24px;
+            height: 24px;
+            display: inline-block;
+        }
+        pre {
+            background: #f5f5f5;
+            padding: 12px;
+            border-radius: 6px;
+            overflow-x: auto;
+            font-size: 0.85rem;
+            margin-top: 10px;
+        }
+        .btn {
+            background: #E3702D;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 6px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+        .btn:hover {
+            background: #c95c20;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔍 System Diagnostic Check</h1>
+        <p class="subtitle">Checking all APIs, connectivity, and frontend files...</p>
+        
+        <div id="checks"></div>
+        
+        <button class="btn" onclick="runChecks()">Run Checks Again</button>
+    </div>
+
+    <script src="./assets/js/config.js"></script>
+    <script>
+        const checks = [
+            {
+                name: 'Backend Health',
+                test: async () => {
+                    const res = await fetch(`${API_BASE}/api/health`);
+                    const data = await res.json();
+                    if (!res.ok || !data.ok) throw new Error('Backend not healthy');
+                    return `✅ Backend is running on ${API_BASE}`;
+                }
+            },
+            {
+                name: 'Tours API',
+                test: async () => {
+                    const res = await fetch(`${API_BASE}/api/tours`);
+                    const data = await res.json();
+                    if (!res.ok || !data.ok) throw new Error('Tours API failed');
+                    const approved = data.tours.filter(t => t.status === 'approved');
+                    return `✅ Found ${approved.length} approved tours`;
+                }
+            },
+            {
+                name: 'Guides API',
+                test: async () => {
+                    const res = await fetch(`${API_BASE}/api/guides`);
+                    const data = await res.json();
+                    if (!res.ok || !data.success) throw new Error('Guides API failed');
+                    return `✅ Found ${data.data.length} verified guides\n${JSON.stringify(data.data.map(g => g.full_name), null, 2)}`;
+                }
+            },
+            {
+                name: 'Config.js Loaded',
+                test: async () => {
+                    if (typeof API_BASE === 'undefined') throw new Error('API_BASE not defined');
+                    return `✅ API_BASE = ${API_BASE}`;
+                }
+            },
+            {
+                name: 'Guides.js File',
+                test: async () => {
+                    const res = await fetch('./assets/js/guides.js');
+                    if (!res.ok) throw new Error('guides.js not found');
+                    const text = await res.text();
+                    return `✅ guides.js loaded (${text.length} bytes)`;
+                }
+            },
+            {
+                name: 'Guides CSS File',
+                test: async () => {
+                    const res = await fetch('./assets/css/guides-section.css');
+                    if (!res.ok) throw new Error('guides-section.css not found');
+                    const text = await res.text();
+                    return `✅ guides-section.css loaded (${text.length} bytes)`;
+                }
+            },
+            {
+                name: 'Homepage Elements',
+                test: async () => {
+                    const res = await fetch('./index.html');
+                    const html = await res.text();
+                    const hasGrid = html.includes('id="guidesGrid"');
+                    const hasLoading = html.includes('id="guidesLoading"');
+                    const hasScript = html.includes('guides.js');
+                    const hasCSS = html.includes('guides-section.css');
+                    
+                    if (!hasGrid || !hasLoading || !hasScript || !hasCSS) {
+                        throw new Error('Missing required elements');
+                    }
+                    return `✅ All required elements present in index.html`;
+                }
+            },
+            {
+                name: 'Browser Console',
+                test: async () => {
+                    return `ℹ️ Check browser console (Cmd+Option+I) for JavaScript errors`;
+                }
+            }
+        ];
+
+        async function runChecks() {
+            const container = document.getElementById('checks');
+            container.innerHTML = '';
+            
+            for (const check of checks) {
+                const div = document.createElement('div');
+                div.className = 'check-item loading';
+                div.innerHTML = `
+                    <div class="check-title">
+                        <span class="icon">⏳</span>
+                        ${check.name}
+                    </div>
+                    <div class="check-message">Running...</div>
+                `;
+                container.appendChild(div);
+                
+                try {
+                    const result = await check.test();
+                    div.className = 'check-item success';
+                    div.innerHTML = `
+                        <div class="check-title">
+                            <span class="icon">✅</span>
+                            ${check.name}
+                        </div>
+                        <div class="check-message"><pre>${result}</pre></div>
+                    `;
+                } catch (err) {
+                    div.className = 'check-item error';
+                    div.innerHTML = `
+                        <div class="check-title">
+                            <span class="icon">❌</span>
+                            ${check.name}
+                        </div>
+                        <div class="check-message">
+                            <strong>Error:</strong> ${err.message}
+                            <pre>${err.stack || ''}</pre>
+                        </div>
+                    `;
+                }
+            }
+        }
+
+        // Run checks on load
+        document.addEventListener('DOMContentLoaded', runChecks);
+    </script>
+</body>
+</html>

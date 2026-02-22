@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Guides</title>
+    <style>
+        body { font-family: sans-serif; padding: 20px; background: #FFF7EB; }
+        .guide { background: white; padding: 20px; margin: 10px 0; border-radius: 8px; }
+        .error { color: red; }
+        .success { color: green; }
+    </style>
+</head>
+<body>
+    <h1>Guides API Test</h1>
+    <div id="status">Testing...</div>
+    <div id="results"></div>
+    
+    <script>
+        const API_BASE = 'http://localhost:5000';
+        
+        async function testGuides() {
+            const status = document.getElementById('status');
+            const results = document.getElementById('results');
+            
+            try {
+                status.innerHTML = '<p>Fetching from: ' + API_BASE + '/api/guides</p>';
+                
+                const res = await fetch(`${API_BASE}/api/guides`);
+                const json = await res.json();
+                
+                status.innerHTML = '<p class="success">✅ API Response: ' + JSON.stringify(json.success) + '</p>';
+                
+                if (json.success && json.data) {
+                    results.innerHTML = '<h2>Found ' + json.data.length + ' guides:</h2>';
+                    json.data.forEach(guide => {
+                        results.innerHTML += `
+                            <div class="guide">
+                                <h3>${guide.full_name}</h3>
+                                <p>Slug: ${guide.slug}</p>
+                                <p>Intro: ${guide.short_intro}</p>
+                                <img src="${guide.photo_url}" width="100" />
+                            </div>
+                        `;
+                    });
+                } else {
+                    results.innerHTML = '<p class="error">No guides found</p>';
+                }
+            } catch (err) {
+                status.innerHTML = '<p class="error">❌ Error: ' + err.message + '</p>';
+                results.innerHTML = '<pre>' + err.stack + '</pre>';
+            }
+        }
+        
+        testGuides();
+    </script>
+</body>
+</html>
