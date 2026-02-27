@@ -1,0 +1,84 @@
+version: '3.8'
+
+services:
+  mongodb:
+    image: mongo:7.0
+    container_name: ubuntu-mongodb
+    restart: unless-stopped
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: Admin123!
+      MONGO_INITDB_DATABASE: ubuntu-travels
+    volumes:
+      - mongodb_data:/data/db
+      - mongodb_config:/data/configdb
+    networks:
+      - ubuntu-network
+    healthcheck:
+      test: echo 'db.runCommand("ping").ok' | mongosh localhost:27017/test --quiet
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  mongo-express:
+    image: mongo-express:latest
+    container_name: mongo-express
+    restart: unless-stopped
+    ports:
+      - "8081:8081"
+    environment:
+      ME_CONFIG_MONGODB_ADMINUSERNAME: admin
+      ME_CONFIG_MONGODB_ADMINPASSWORD: Admin123!
+      ME_CONFIG_MONGODB_URL: mongodb://admin:Admin123!@mongodb:27017/
+      ME_CONFIG_BASICAUTH_USERNAME: admin
+      ME_CONFIG_BASICAUTH_PASSWORD: admin123
+    depends_on:
+      mongodb:
+        condition: service_healthy
+    networks:
+      - ubuntu-network
+
+  backend:
+    build: ./ubuntu-backend
+    container_name: ubuntu-backend
+    restart: unless-stopped
+    ports:
+      - "5000:5000"
+    environment:
+      MONGO_URI: mongodb://admin:Admin123!@mongodb:27017/ubuntu-travels?authSource=admin
+      NODE_ENV: production
+      PORT: 5000
+      JWT_SECRET: 1a82ea97b218caa6e9967bdd71285fbe1de9458fb8b042c9a7c9fb1a8779e7ae49fa97e0185b86d78272b989d849b656cc57896638f65d451f24a222f34f3c18
+      JWT_EXPIRE: 7d
+      ADMIN_JWT_SECRET: 7fca4e5d1fdb97bb1dfe918231cd35f1ba93025134aa23c89d0cb3c06bfb2c9d94d051ddc71cacc1722c9c9a20f6d5712d1f0006776aae4335d69117a2cd76c2
+      CORS_ORIGIN: http://localhost:80,http://localhost
+    depends_on:
+      mongodb:
+        condition: service_healthy
+    volumes:
+      - backend_uploads:/app/uploads
+    networks:
+      - ubuntu-network
+
+  frontend:
+    build: ./ubuntu-frontend
+    container_name: ubuntu-frontend
+    restart: unless-stopped
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+    networks:
+      - ubuntu-network
+
+networks:
+  ubuntu-network:
+    driver: bridge
+
+volumes:
+  mongodb_data:
+  mongodb_config:
+  backend_uploads:
