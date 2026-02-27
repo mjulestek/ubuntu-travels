@@ -1,0 +1,109 @@
+<!-- Ubuntu Travels Brand Header -->
+<header class="brand-header" data-brand-header>
+    <div class="brand-header-container">
+        <a href="./index.html" class="brand-logo-link" aria-label="Ubuntu Travels Home">
+            <div class="brand-logo">
+                <ion-icon name="paw-outline" class="brand-logo-icon"></ion-icon>
+                <div class="brand-logo-text">
+                    <span class="brand-name">Ubuntu Travels</span>
+                    <span class="brand-tagline" data-brand-tagline>Explore East Africa</span>
+                </div>
+            </div>
+        </a>
+    </div>
+</header>
+
+<style>
+.brand-header {
+    background: #E3702D;
+    padding: 20px 0;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+.brand-header-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+.brand-logo-link {
+    text-decoration: none;
+    display: inline-block;
+}
+
+.brand-logo {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.brand-logo-icon {
+    font-size: 48px;
+    color: #FFD700;
+    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));
+}
+
+.brand-logo-text {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.brand-name {
+    font-size: 32px;
+    font-weight: 700;
+    color: white;
+    font-family: 'Poppins', sans-serif;
+    letter-spacing: -0.5px;
+    line-height: 1;
+}
+
+.brand-tagline {
+    font-size: 14px;
+    font-weight: 500;
+    color: rgba(255, 255, 255, 0.9);
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    line-height: 1;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .brand-header {
+        padding: 15px 0;
+    }
+    
+    .brand-logo-icon {
+        font-size: 36px;
+    }
+    
+    .brand-name {
+        font-size: 24px;
+    }
+    
+    .brand-tagline {
+        font-size: 11px;
+    }
+}
+
+@media (max-width: 480px) {
+    .brand-logo {
+        gap: 10px;
+    }
+    
+    .brand-logo-icon {
+        font-size: 32px;
+    }
+    
+    .brand-name {
+        font-size: 20px;
+    }
+    
+    .brand-tagline {
+        font-size: 10px;
+    }
+}
+</style>

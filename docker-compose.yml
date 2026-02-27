@@ -1,0 +1,426 @@
+# ============================================
+# UBUNTU TRAVELS - PRODUCTION DOCKER COMPOSE
+# ============================================
+# This file orchestrates all services for production deployment on EC2
+# 
+# Services included:
+# 1. MongoDB (database from Docker Hub)
+# 2. Mongo Express (web-based database UI)
+# 3. Backend API (from your AWS ECR)
+# 4. Frontend (from your AWS ECR)
+#
+# IMPORTANT: This file uses environment variables from .env file
+# Make sure ubuntu-backend/.env exists with all required variables
+#
+# Usage:
+#   docker-compose up -d
+#
+# Prerequisites:
+#   - Docker and Docker Compose installed
+#   - Logged into AWS ECR
+#   - .env file with secrets created (ubuntu-backend/.env)
+#   - EC2 security groups configured
+# ============================================
+
+version: '3.8'
+
+# Load environment variables from .env file
+# Docker Compose will look for ubuntu-backend/.env
+env_file:
+  - ubuntu-backend/.env
+
+services:
+  # ============================================
+  # MONGODB DATABASE
+  # ============================================
+  # Official MongoDB 7.0 image from Docker Hub
+  # Stores all application data (users, tours, bookings)
+  
+  mongodb:
+    # Image from Docker Hub (not ECR)
+    image: mongo:7.0
+    
+    # Container name for easy reference
+    container_name: ubuntu-mongodb
+    
+    # Restart policy: always restart unless manually stopped
+    restart: unless-stopped
+    
+    # Port mapping: HOST:CONTAINER
+    # Expose MongoDB port for external connections (Compass, etc.)
+    ports:
+      - "27017:27017"
+    
+    # Environment variables for MongoDB initialization
+    environment:
+      # Root username for MongoDB admin
+      # Loaded from .env file for security
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_ROOT_USERNAME}
+      
+      # Root password for MongoDB admin
+      # Loaded from .env file for security
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_ROOT_PASSWORD}
+      
+      # Default database to create on first run
+      MONGO_INITDB_DATABASE: ${MONGO_DATABASE}
+    
+    # Volumes for data persistence
+    # Data survives even if container is deleted
+    volumes:
+      # MongoDB data files
+      - mongodb_data:/data/db
+      
+      # MongoDB configuration files
+      - mongodb_config:/data/configdb
+    
+    # Connect to custom network
+    networks:
+      - ubuntu-network
+    
+    # Health check to verify MongoDB is ready
+    # Other services wait for this before starting
+    healthcheck:
+      # Command to check if MongoDB is responding
+      test: echo 'db.runCommand("ping").ok' | mongosh localhost:27017/test --quiet
+      
+      # Check every 30 seconds
+      interval: 30s
+      
+      # Timeout after 10 seconds
+      timeout: 10s
+      
+      # Retry 3 times before marking unhealthy
+      retries: 3
+      
+      # Wait 40 seconds before first check (startup time)
+      start_period: 40s
+
+  # ============================================
+  # MONGO EXPRESS - DATABASE WEB UI
+  # ============================================
+  # Web-based MongoDB admin interface
+  # Access at: http://your-ec2-ip:8081
+  # Perfect for presentations and monitoring
+  
+  mongo-express:
+    # Official Mongo Express image from Docker Hub
+    image: mongo-express:latest
+    
+    # Container name
+    container_name: mongo-express
+    
+    # Restart policy
+    restart: unless-stopped
+    
+    # Port mapping: HOST:CONTAINER
+    # Access web UI on port 8081
+    ports:
+      - "8081:8081"
+    
+    # Configuration for Mongo Express
+    environment:
+      # MongoDB connection credentials
+      # Must match MongoDB service credentials from .env
+      ME_CONFIG_MONGODB_ADMINUSERNAME: ${MONGO_ROOT_USERNAME}
+      ME_CONFIG_MONGODB_ADMINPASSWORD: ${MONGO_ROOT_PASSWORD}
+      
+      # MongoDB connection URL
+      # Uses service name 'mongodb' (Docker DNS)
+      ME_CONFIG_MONGODB_URL: mongodb://${MONGO_ROOT_USERNAME}:${MONGO_ROOT_PASSWORD}@mongodb:27017/
+      
+      # Web UI login credentials
+      # Username to access Mongo Express
+      ME_CONFIG_BASICAUTH_USERNAME: admin
+      
+      # Password to access Mongo Express
+      # CHANGE THIS in production!
+      ME_CONFIG_BASICAUTH_PASSWORD: admin123
+    
+    # Wait for MongoDB to be healthy before starting
+    depends_on:
+      mongodb:
+        condition: service_healthy
+    
+    # Connect to same network as MongoDB
+    networks:
+      - ubuntu-network
+
+  # ============================================
+  # BACKEND API
+  # ============================================
+  # Your Node.js/Express API server
+  # Pulled from your private AWS ECR repository
+  
+  backend:
+    # Image from your AWS ECR
+    # REPLACE 452284480768 with your AWS account ID
+    image: 452284480768.dkr.ecr.us-west-2.amazonaws.com/ubuntu-travels-backend:latest
+    
+    # Container name
+    container_name: ubuntu-backend
+    
+    # Restart policy
+    restart: unless-stopped
+    
+    # Port mapping: HOST:CONTAINER
+    # API accessible on port 5000
+    ports:
+      - "5000:5000"
+    
+    # Environment variables for backend
+    # These configure how your app runs
+    environment:
+      # ========================================
+      # DATABASE CONNECTION
+      # ========================================
+      # MongoDB connection string
+      # Loaded from .env file for security
+      # Uses service name 'mongodb' (Docker DNS resolves this)
+      MONGO_URI: ${MONGO_URI}
+      
+      # ========================================
+      # APPLICATION SETTINGS
+      # ========================================
+      # Run in production mode (optimized, secure)
+      NODE_ENV: production
+      
+      # Port the backend listens on (inside container)
+      PORT: 5000
+      
+      # ========================================
+      # AUTHENTICATION SECRETS
+      # ========================================
+      # JWT secret for signing user tokens
+      # Loaded from .env file (not hardcoded)
+      JWT_SECRET: ${JWT_SECRET}
+      
+      # How long JWT tokens are valid
+      JWT_EXPIRE: 7d
+      
+      # Separate JWT secret for admin tokens
+      ADMIN_JWT_SECRET: ${ADMIN_JWT_SECRET}
+      
+      # ========================================
+      # CORS CONFIGURATION
+      # ========================================
+      # Which domains can access your API
+      # REPLACE 'your-ec2-public-ip' with actual IP
+      # Add your domain in production
+      CORS_ORIGIN: http://localhost:80,http://54.188.56.79,http://54.188.56.79:80
+      
+      # ========================================
+      # EMAIL SERVICE (AWS SES)
+      # ========================================
+      # SMTP server for sending emails
+      SMTP_HOST: email-smtp.us-west-2.amazonaws.com
+      
+      # SMTP port (587 = STARTTLS)
+      SMTP_PORT: 587
+      
+      # SES SMTP credentials (from .env file)
+      SMTP_USER: ${SMTP_USER}
+      SMTP_PASSWORD: ${SMTP_PASSWORD}
+      
+      # Sender email address (must be verified in SES)
+      FROM_EMAIL: ${FROM_EMAIL}
+      
+      # ========================================
+      # RATE LIMITING
+      # ========================================
+      # Time window in milliseconds (15 minutes)
+      RATE_LIMIT_WINDOW_MS: 900000
+      
+      # Max requests per window (100 requests per 15 min)
+      RATE_LIMIT_MAX_REQUESTS: 100
+      
+      # ========================================
+      # LOGGING
+      # ========================================
+      # Log level: error, warn, info, debug
+      LOG_LEVEL: info
+      
+      # ========================================
+      # AWS S3 (OPTIONAL)
+      # ========================================
+      # Leave empty to use local storage
+      # Fill in to use S3 for file uploads
+      AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID:-}
+      AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY:-}
+      AWS_REGION: us-west-2
+      AWS_S3_BUCKET: ${AWS_S3_BUCKET:-}
+    
+    # Wait for MongoDB to be healthy before starting
+    # Backend needs database to be ready
+    depends_on:
+      mongodb:
+        condition: service_healthy
+    
+    # Volumes for persistent file storage
+    # Uploaded files (profile pics, tour images) stored here
+    volumes:
+      # Map host directory to container directory
+      - backend_uploads:/app/uploads
+    
+    # Connect to same network
+    networks:
+      - ubuntu-network
+    
+    # Health check for backend API
+    # Verifies the API is responding
+    healthcheck:
+      # Check the health endpoint
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:5000/api/health"]
+      
+      # Check every 30 seconds
+      interval: 30s
+      
+      # Timeout after 10 seconds
+      timeout: 10s
+      
+      # Retry 3 times before marking unhealthy
+      retries: 3
+      
+      # Wait 40 seconds before first check
+      start_period: 40s
+
+  # ============================================
+  # FRONTEND
+  # ============================================
+  # Your React/HTML frontend served by Nginx
+  # Pulled from your private AWS ECR repository
+  
+  frontend:
+    # Image from your AWS ECR
+    # REPLACE 452284480768 with your AWS account ID
+    image: 452284480768.dkr.ecr.us-west-2.amazonaws.com/ubuntu-travels-frontend:latest
+    
+    # Container name
+    container_name: ubuntu-frontend
+    
+    # Restart policy
+    restart: unless-stopped
+    
+    # Port mapping: HOST:CONTAINER
+    # Website accessible on port 80 (HTTP)
+    ports:
+      - "80:80"
+    
+    # Wait for backend to be ready
+    # Frontend needs backend API to function
+    depends_on:
+      - backend
+    
+    # Connect to same network
+    networks:
+      - ubuntu-network
+
+# ============================================
+# NETWORKS
+# ============================================
+# Custom network for service communication
+# All services on this network can talk to each other using service names
+
+networks:
+  ubuntu-network:
+    # Bridge driver: default Docker network type
+    # Services can communicate using container names as hostnames
+    driver: bridge
+
+# ============================================
+# VOLUMES
+# ============================================
+# Named volumes for persistent data storage
+# Data survives container restarts and deletions
+
+volumes:
+  # MongoDB data files
+  # Contains all database collections and documents
+  mongodb_data:
+    driver: local
+  
+  # MongoDB configuration files
+  # Contains MongoDB settings and logs
+  mongodb_config:
+    driver: local
+  
+  # Backend uploaded files
+  # Contains user profile pictures and tour images
+  backend_uploads:
+    driver: local
+
+# ============================================
+# DEPLOYMENT INSTRUCTIONS
+# ============================================
+#
+# 1. CREATE .env FILE
+#    Create a .env file in the same directory with:
+#    
+#    JWT_SECRET=your-jwt-secret-here
+#    ADMIN_JWT_SECRET=your-admin-jwt-secret-here
+#    SMTP_USER=your-ses-smtp-username
+#    SMTP_PASSWORD=your-ses-smtp-password
+#    FROM_EMAIL=your-verified-email@example.com
+#    AWS_ACCESS_KEY_ID=your-aws-key (optional)
+#    AWS_SECRET_ACCESS_KEY=your-aws-secret (optional)
+#    AWS_S3_BUCKET=your-bucket-name (optional)
+#
+# 2. UPDATE ECR IMAGE URLS
+#    Replace '452284480768' with your AWS account ID
+#    Replace 'your-ec2-public-ip' with actual IP
+#
+# 3. UPDATE PASSWORDS
+#    Change MongoDB passwords in production
+#    Change Mongo Express password
+#
+# 4. CONFIGURE EC2 SECURITY GROUP
+#    Allow these ports:
+#    - 22 (SSH)
+#    - 80 (Frontend)
+#    - 5000 (Backend API)
+#    - 8081 (Mongo Express - optional, restrict to your IP)
+#    - 27017 (MongoDB - optional, restrict to your IP)
+#
+# 5. LOGIN TO ECR
+#    aws ecr get-login-password --region us-west-2 | \
+#    docker login --username AWS --password-stdin \
+#    452284480768.dkr.ecr.us-west-2.amazonaws.com
+#
+# 6. PULL IMAGES
+#    docker-compose -f docker-compose.production.yml pull
+#
+# 7. START SERVICES
+#    docker-compose -f docker-compose.production.yml up -d
+#
+# 8. CHECK STATUS
+#    docker-compose -f docker-compose.production.yml ps
+#    docker-compose -f docker-compose.production.yml logs -f
+#
+# 9. ACCESS APPLICATION
+#    Frontend: http://your-ec2-ip
+#    Backend: http://your-ec2-ip:5000/api/health
+#    Mongo Express: http://your-ec2-ip:8081
+#
+# 10. STOP SERVICES
+#     docker-compose -f docker-compose.production.yml down
+#
+# ============================================
+# TROUBLESHOOTING
+# ============================================
+#
+# View logs:
+#   docker-compose -f docker-compose.production.yml logs -f [service-name]
+#
+# Restart service:
+#   docker-compose -f docker-compose.production.yml restart [service-name]
+#
+# Check health:
+#   docker ps
+#
+# Enter container:
+#   docker exec -it ubuntu-backend sh
+#   docker exec -it ubuntu-mongodb mongosh
+#
+# Remove everything:
+#   docker-compose -f docker-compose.production.yml down -v
+#
+# ============================================

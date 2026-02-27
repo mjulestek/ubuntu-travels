@@ -1,0 +1,41 @@
+# Exclude node_modules - we'll install fresh in the container
+node_modules
+
+# Exclude npm debug logs
+npm-debug.log
+
+# Exclude environment files - these should be provided at runtime
+.env
+.env.local
+.env.*.local
+
+# Exclude git files
+.git
+.gitignore
+
+# Exclude documentation
+README.md
+*.md
+
+# Exclude development files
+.vscode
+.idea
+
+# Exclude test files
+*.test.js
+*.spec.js
+__tests__
+
+# Exclude CI/CD files
+.github
+.gitlab-ci.yml
+
+# Exclude OS files
+.DS_Store
+Thumbs.db
+
+# Exclude temporary files
+*.log
+*.tmp
+tmp/
+temp/
