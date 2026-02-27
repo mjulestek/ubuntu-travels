@@ -1,72 +1,36 @@
 # Ubuntu Travels
 
-A full-stack travel booking platform deployed on AWS with high availability architecture.
+A travel booking web application where users can browse tours, make bookings, and manage their trips. Built with modern web technologies and deployed on AWS cloud infrastructure.
 
-## Tech Stack
+## What It Does
 
-- **Frontend**: HTML, CSS, JavaScript → S3 + CloudFront
-- **Backend**: Node.js + Express → EC2 with Auto Scaling
-- **Database**: MongoDB → Dedicated EC2 instance
-- **Infrastructure**: AWS Multi-AZ deployment
+- Users can register, login, and browse available tours
+- Book tours and manage reservations
+- Admin dashboard to manage tours and bookings
+- Tour guides can manage their assigned tours
 
-## AWS Architecture
+## Architecture
 
-```
-Users → CloudFront → S3 (Frontend)
-              ↓
-            ALB
-              ↓
-        Auto Scaling Group (2-4 EC2)
-              ↓
-          Backend API
-              ↓
-          MongoDB
-```
+**Frontend**: Static website (HTML/CSS/JS) hosted on S3 and delivered globally via CloudFront CDN
 
-## AWS Services Used
+**Backend**: Node.js REST API running on EC2 instances with Auto Scaling (2-4 instances) behind an Application Load Balancer
 
-- VPC (Multi-AZ with public/private subnets)
-- EC2 (Auto Scaling Group)
-- Application Load Balancer
-- S3 (Static website hosting)
-- CloudFront (CDN)
-- ECR (Docker registry)
+**Database**: MongoDB running on a dedicated EC2 instance in a private subnet
 
-## Local Development
+**Network**: Multi-AZ VPC with public and private subnets for security and high availability
+
+## AWS Services
+
+VPC, EC2, Application Load Balancer, Auto Scaling Group, S3, CloudFront, ECR
+
+## Run Locally
 
 ```bash
 docker-compose -f docker-compose-local.yml up -d
 ```
 
-Access:
-- Frontend: http://localhost
-- Backend: http://localhost:5000
-- Database UI: http://localhost:8081
-
-## Features
-
-- User registration and authentication
-- Tour browsing and booking
-- Admin dashboard
-- Guide portal
-- Email notifications (AWS SES)
-- File uploads (AWS S3)
-
-## Project Structure
-
-```
-ubuntu-travels/
-├── ubuntu-backend/     # Node.js API
-├── ubuntu-frontend/    # Static website
-└── docker-compose.yml  # Local development
-```
-
-## Author
-
-**Jules Munyaneza**  
-Junior Cloud Engineer  
-[LinkedIn](https://linkedin.com/in/jules-munyaneza-40418a364) | [GitHub](https://github.com/mjulestek) | mjules.tek@gmail.com
+Access at http://localhost
 
 ---
 
-**Capstone Project** - Cloud & DevOps Bootcamp 2026
+Cloud & DevOps Capstone Project 2026
